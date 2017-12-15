@@ -98,6 +98,7 @@ public class SelectHzGisTpsFw implements Job {
 				logger.info(String.valueOf(count));
 			} catch (SQLException e) {
 				e.printStackTrace();
+				logger.warning(Reggol.getStackTrace(e));
 			} finally {
 				jracle.close(resultSet, preparedStatement, connection);
 			}
@@ -156,6 +157,7 @@ public class SelectHzGisTpsFw implements Job {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			logger.warning(Reggol.getStackTrace(e));
 		} finally {
 			jracle.close(resultSet, preparedStatement, connection);
 		}

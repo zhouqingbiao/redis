@@ -35,8 +35,8 @@ public class Publish {
 			logger.info(address + "?wsdl");
 			logger.info("wsimport -keep " + address + "?wsdl");
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.warning(Reggol.getStackTrace(e));
 		}
 
 	}
