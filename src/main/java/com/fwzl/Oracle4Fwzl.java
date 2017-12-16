@@ -23,24 +23,24 @@ public class Oracle4Fwzl implements Job {
 
 	public void doOracle4Fwzl() {
 
-		// OracleLike¿ªÊ¼Ê±¼ä
+		// OracleLikeå¼€å§‹æ—¶é—´
 		long startTime4OracleOfLike = System.nanoTime();
 
-		// ¶¨ÒåOralce²¢»ñÈ¡Á¬½Ó
+		// å®šä¹‰Oralceå¹¶è·å–è¿æ¥
 		Oracle jracle = new Oracle();
 		Connection connection = jracle.getConnection();
 
-		// »ñÈ¡fwzlĞÅÏ¢
+		// è·å–fwzlä¿¡æ¯
 		StringBuffer sql = new StringBuffer(
 				"select t.fwzl from hz_gis.tps_fw t where t.lsbz = 0 and t.fwzl is not null and t.fwsmzq = 1201");
 
-		// LikeĞÅÏ¢
-		String fwzl_like = "å§¼Ò 13";
+		// Likeä¿¡æ¯
+		String fwzl_like = "æ¿®å®¶ 13";
 
-		// È¥³ıÍ·Î²¿Õ¸ñ
+		// å»é™¤å¤´å°¾ç©ºæ ¼
 		fwzl_like = fwzl_like.trim();
 
-		// Èç¹ûÓĞ¿Õ¸ñÔòÖ´ĞĞ·Ö¸î×é×°
+		// å¦‚æœæœ‰ç©ºæ ¼åˆ™æ‰§è¡Œåˆ†å‰²ç»„è£…
 		if (fwzl_like.indexOf(" ") != -1) {
 			String[] string_fwzl = fwzl_like.split(" ");
 			for (int i = 0; i < string_fwzl.length; i++) {
@@ -50,7 +50,7 @@ public class Oracle4Fwzl implements Job {
 
 		PreparedStatement preparedStatement = jracle.getPreparedStatement(connection, sql.toString());
 
-		// SQL¸³Öµ
+		// SQLèµ‹å€¼
 		if (fwzl_like.indexOf(" ") != -1) {
 			String[] string_fwzl = fwzl_like.split(" ");
 			for (int i = 0; i < string_fwzl.length; i++) {
@@ -64,7 +64,7 @@ public class Oracle4Fwzl implements Job {
 
 		ResultSet resultSet = jracle.getResultSet(preparedStatement);
 
-		// Êı¾İ´æÈëMap
+		// æ•°æ®å­˜å…¥Map
 		List<String> list = new ArrayList<String>();
 		try {
 			while (resultSet.next()) {
@@ -74,70 +74,70 @@ public class Oracle4Fwzl implements Job {
 			e.printStackTrace();
 		}
 
-		// OracleLikeÍ£Ö¹Ê±¼ä
+		// OracleLikeåœæ­¢æ—¶é—´
 		long stopTime4OracleOfLike = System.nanoTime();
-		System.out.println("¿ªÊ¼Ê±¼ä£¨OracleLike£©£º" + startTime4OracleOfLike);
-		System.out.println("Í£Ö¹Ê±¼ä£¨OracleLike£©£º" + stopTime4OracleOfLike);
+		System.out.println("å¼€å§‹æ—¶é—´ï¼ˆOracleLikeï¼‰ï¼š" + startTime4OracleOfLike);
+		System.out.println("åœæ­¢æ—¶é—´ï¼ˆOracleLikeï¼‰ï¼š" + stopTime4OracleOfLike);
 
-		// Oracle×ÜÊ±¼äÏûºÄ
-		System.out.println("ÔËĞĞÊ±¼ä£¨OracleLike£©£º" + (stopTime4OracleOfLike - startTime4OracleOfLike) + "ÄÉÃë");
-		System.out.println("ÔËĞĞÊ±¼ä£¨OracleLike£©£º" + (stopTime4OracleOfLike - startTime4OracleOfLike) / 1000000 + "ºÁÃë");
-		System.out.println("ÔËĞĞÊ±¼ä£¨OracleLike£©£º" + (stopTime4OracleOfLike - startTime4OracleOfLike) / 1000000000 + "Ãë");
+		// Oracleæ€»æ—¶é—´æ¶ˆè€—
+		System.out.println("è¿è¡Œæ—¶é—´ï¼ˆOracleLikeï¼‰ï¼š" + (stopTime4OracleOfLike - startTime4OracleOfLike) + "çº³ç§’");
+		System.out.println("è¿è¡Œæ—¶é—´ï¼ˆOracleLikeï¼‰ï¼š" + (stopTime4OracleOfLike - startTime4OracleOfLike) / 1000000 + "æ¯«ç§’");
+		System.out.println("è¿è¡Œæ—¶é—´ï¼ˆOracleLikeï¼‰ï¼š" + (stopTime4OracleOfLike - startTime4OracleOfLike) / 1000000000 + "ç§’");
 		jracle.close(resultSet, preparedStatement, connection);
 
 		// ------------------------------------------------------------------------------------------------
 
-		// Oracle¿ªÊ¼Ê±¼ä
+		// Oracleå¼€å§‹æ—¶é—´
 		long startTime4Oracle = System.nanoTime();
-		String fwzl = "å§¼Ò¶«´å13´±3µ¥Ôª303ÊÒ";
+		String fwzl = "æ¿®å®¶ä¸œæ‘13å¹¢3å•å…ƒ303å®¤";
 		if (!"".equals(fwzl) || null == fwzl) {
 			Map<String, String> map = new Oracle4Fwzl().getFwzl(fwzl);
 			Set<String> set_map = map.keySet();
 			for (String string : set_map) {
-				System.out.println(string + "£º" + map.get(string));
+				System.out.println(string + "ï¼š" + map.get(string));
 			}
 		}
 
-		// OracleÍ£Ö¹Ê±¼ä
+		// Oracleåœæ­¢æ—¶é—´
 		long stopTime4Oracle = System.nanoTime();
-		System.out.println("¿ªÊ¼Ê±¼ä£¨Oracle£©£º" + startTime4Oracle);
-		System.out.println("Í£Ö¹Ê±¼ä£¨Oracle£©£º" + stopTime4Oracle);
+		System.out.println("å¼€å§‹æ—¶é—´ï¼ˆOracleï¼‰ï¼š" + startTime4Oracle);
+		System.out.println("åœæ­¢æ—¶é—´ï¼ˆOracleï¼‰ï¼š" + stopTime4Oracle);
 
-		// Oracle×ÜÊ±¼äÏûºÄ
-		System.out.println("ÔËĞĞÊ±¼ä£¨Oracle£©£º" + (stopTime4Oracle - startTime4Oracle) + "ÄÉÃë");
-		System.out.println("ÔËĞĞÊ±¼ä£¨Oracle£©£º" + (stopTime4Oracle - startTime4Oracle) / 1000000 + "ºÁÃë");
-		System.out.println("ÔËĞĞÊ±¼ä£¨Oracle£©£º" + (stopTime4Oracle - startTime4Oracle) / 1000000000 + "Ãë");
+		// Oracleæ€»æ—¶é—´æ¶ˆè€—
+		System.out.println("è¿è¡Œæ—¶é—´ï¼ˆOracleï¼‰ï¼š" + (stopTime4Oracle - startTime4Oracle) + "çº³ç§’");
+		System.out.println("è¿è¡Œæ—¶é—´ï¼ˆOracleï¼‰ï¼š" + (stopTime4Oracle - startTime4Oracle) / 1000000 + "æ¯«ç§’");
+		System.out.println("è¿è¡Œæ—¶é—´ï¼ˆOracleï¼‰ï¼š" + (stopTime4Oracle - startTime4Oracle) / 1000000000 + "ç§’");
 
 		// ----------------------------------------------------------------------------------------------------------
 
-		System.out.println("²éÑ¯¹Ø¼ü×Ö£º" + fwzl_like);
-		System.out.println("OracleLikeÏûºÄÊ±¼ä£º" + (stopTime4OracleOfLike - startTime4OracleOfLike) + "ÄÉÃë");
-		System.out.println("OracleLikeÏûºÄÊ±¼ä£º" + (stopTime4OracleOfLike - startTime4OracleOfLike) / 1000000 + "ºÁÃë");
-		System.out.println("OracleLikeÏûºÄÊ±¼ä£º" + (stopTime4OracleOfLike - startTime4OracleOfLike) / 1000000000 + "Ãë");
+		System.out.println("æŸ¥è¯¢å…³é”®å­—ï¼š" + fwzl_like);
+		System.out.println("OracleLikeæ¶ˆè€—æ—¶é—´ï¼š" + (stopTime4OracleOfLike - startTime4OracleOfLike) + "çº³ç§’");
+		System.out.println("OracleLikeæ¶ˆè€—æ—¶é—´ï¼š" + (stopTime4OracleOfLike - startTime4OracleOfLike) / 1000000 + "æ¯«ç§’");
+		System.out.println("OracleLikeæ¶ˆè€—æ—¶é—´ï¼š" + (stopTime4OracleOfLike - startTime4OracleOfLike) / 1000000000 + "ç§’");
 		System.out.println(
 				"----------------------------------------------------------------------------------------------------------");
-		System.out.println("¾«È·²éÑ¯£º" + fwzl);
-		System.out.println("OracleÏûºÄÊ±¼ä£º" + (stopTime4Oracle - startTime4Oracle) + "ÄÉÃë");
-		System.out.println("OracleÏûºÄÊ±¼ä£º" + (stopTime4Oracle - startTime4Oracle) / 1000000 + "ºÁÃë");
-		System.out.println("OracleÏûºÄÊ±¼ä£º" + (stopTime4Oracle - startTime4Oracle) / 1000000000 + "Ãë");
+		System.out.println("ç²¾ç¡®æŸ¥è¯¢ï¼š" + fwzl);
+		System.out.println("Oracleæ¶ˆè€—æ—¶é—´ï¼š" + (stopTime4Oracle - startTime4Oracle) + "çº³ç§’");
+		System.out.println("Oracleæ¶ˆè€—æ—¶é—´ï¼š" + (stopTime4Oracle - startTime4Oracle) / 1000000 + "æ¯«ç§’");
+		System.out.println("Oracleæ¶ˆè€—æ—¶é—´ï¼š" + (stopTime4Oracle - startTime4Oracle) / 1000000000 + "ç§’");
 		System.out.println(
 				"----------------------------------------------------------------------------------------------------------");
-		System.out.println("×ÜÏûºÄÊ±¼ä£º"
-				+ ((stopTime4OracleOfLike - startTime4OracleOfLike) + (stopTime4Oracle - startTime4Oracle)) + "ÄÉÃë");
-		System.out.println("×ÜÏûºÄÊ±¼ä£º" + ((stopTime4OracleOfLike - startTime4OracleOfLike) / 1000000
-				+ (stopTime4Oracle - startTime4Oracle) / 1000000) + "ºÁÃë");
-		System.out.println("×ÜÏûºÄÊ±¼ä£º" + ((stopTime4OracleOfLike - startTime4OracleOfLike) / 1000000000
-				+ (stopTime4Oracle - startTime4Oracle) / 1000000000) + "Ãë");
+		System.out.println("æ€»æ¶ˆè€—æ—¶é—´ï¼š"
+				+ ((stopTime4OracleOfLike - startTime4OracleOfLike) + (stopTime4Oracle - startTime4Oracle)) + "çº³ç§’");
+		System.out.println("æ€»æ¶ˆè€—æ—¶é—´ï¼š" + ((stopTime4OracleOfLike - startTime4OracleOfLike) / 1000000
+				+ (stopTime4Oracle - startTime4Oracle) / 1000000) + "æ¯«ç§’");
+		System.out.println("æ€»æ¶ˆè€—æ—¶é—´ï¼š" + ((stopTime4OracleOfLike - startTime4OracleOfLike) / 1000000000
+				+ (stopTime4Oracle - startTime4Oracle) / 1000000000) + "ç§’");
 
 	}
 
 	public Map<String, String> getFwzl(String fwzl) {
 
-		// ¶¨ÒåOralce²¢»ñÈ¡Á¬½Ó
+		// å®šä¹‰Oralceå¹¶è·å–è¿æ¥
 		Oracle jracle = new Oracle();
 		Connection connection = jracle.getConnection();
 
-		// »ñÈ¡fwzlĞÅÏ¢
+		// è·å–fwzlä¿¡æ¯
 		String sql = "select t.* from hz_gis.tps_fw t where t.lsbz = 0 and t.fwzl is not null and t.fwsmzq = 1201 and t.fwzl = ?";
 
 		PreparedStatement preparedStatement = jracle.getPreparedStatement(connection, sql);
@@ -150,7 +150,7 @@ public class Oracle4Fwzl implements Job {
 
 		ResultSet resultSet = jracle.getResultSet(preparedStatement);
 
-		// Êı¾İ´æÈëMap
+		// æ•°æ®å­˜å…¥Map
 		Map<String, String> map = new HashMap<String, String>();
 		try {
 			while (resultSet.next()) {

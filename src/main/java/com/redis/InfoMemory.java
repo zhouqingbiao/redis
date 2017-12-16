@@ -9,7 +9,7 @@ import redis.clients.jedis.JedisPool;
 
 public class InfoMemory {
 
-	// »ñÈ¡Logger
+	// è·å–Logger
 	static Logger logger = Reggol.getLogger();
 
 	public static void main(String[] args) {
@@ -18,24 +18,24 @@ public class InfoMemory {
 
 	public String getInfoMemory() {
 
-		// »ñµÃJedisPool
+		// è·å¾—JedisPool
 		JedisPool jedisPool = new Redis().getJedisPool();
 
-		// »ñµÃJedis
+		// è·å¾—Jedis
 		Jedis jedis = jedisPool.getResource();
 
-		// ÅĞ¶ÏÊÇ·ñÁ¬½Ó³É¹¦
+		// åˆ¤æ–­æ˜¯å¦è¿æ¥æˆåŠŸ
 		if (("PONG").equals(jedis.ping())) {
-			logger.info("RedisÁ¬½Ó³É¹¦£¡");
+			logger.info("Redisè¿æ¥æˆåŠŸï¼");
 		}
 
-		// »ñÈ¡Êı¾İ²¢Êä³ö
+		// è·å–æ•°æ®å¹¶è¾“å‡º
 		String infoMemory = jedis.info("memory");
 
-		// ¹Ø±Õ
+		// å…³é—­
 		jedis.close();
 		jedisPool.close();
-		logger.info("RedisÒÑ¹Ø±Õ£¡");
+		logger.info("Rediså·²å…³é—­ï¼");
 
 		return infoMemory;
 	}

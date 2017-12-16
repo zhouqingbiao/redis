@@ -13,10 +13,10 @@ import com.log.Reggol;
 
 public class Oracle {
 
-	// »ñµÃLogger
+	// è·å¾—Logger
 	static Logger logger = Reggol.getLogger();
 
-	// Êı¾İ¿âÁ¬½Ó´ÎÊı£¬×î´ó²»³¬¹ı4´Î¡£
+	// æ•°æ®åº“è¿æ¥æ¬¡æ•°ï¼Œæœ€å¤§ä¸è¶…è¿‡4æ¬¡ã€‚
 	int i = 1;
 
 	/**
@@ -25,10 +25,10 @@ public class Oracle {
 	 */
 	public Connection getConnection() {
 
-		// ×¢²áÊı¾İ¿âÇı¶¯
+		// æ³¨å†Œæ•°æ®åº“é©±åŠ¨
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			logger.info("OracleÊı¾İ¿âÇı¶¯×¢²á³É¹¦");
+			logger.info("Oracleæ•°æ®åº“é©±åŠ¨æ³¨å†ŒæˆåŠŸ");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			logger.warning(Reggol.getStackTrace(e));
@@ -38,41 +38,41 @@ public class Oracle {
 		String user = null;
 		String password = null;
 
-		// »ñÈ¡PropertiesÊı¾İ
+		// è·å–Propertiesæ•°æ®
 		Properties properties = new Properties();
 		try {
 			properties.load(Oracle.class.getResourceAsStream("Oracle.properties"));
-			logger.info("³É¹¦¼ÓÔØOracle.propertiesÅäÖÃÎÄ¼ş");
+			logger.info("æˆåŠŸåŠ è½½Oracle.propertiesé…ç½®æ–‡ä»¶");
 			url = properties.getProperty("url" + i);
 			user = properties.getProperty("user");
 			password = properties.getProperty("password");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// »ñÈ¡Êı¾İ¿âÁ¬½Ó
+		// è·å–æ•°æ®åº“è¿æ¥
 		Connection connection = null;
 		try {
 			connection = DriverManager.getConnection(url, user, password);
-			logger.info("OracleÊı¾İ¿âÁ¬½Ó³É¹¦");
+			logger.info("Oracleæ•°æ®åº“è¿æ¥æˆåŠŸ");
 			logger.info("url" + "=" + url);
 			logger.info("user" + "=" + user);
 			logger.info("password" + "=" + password);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			logger.warning(url + "Á¬½ÓÊ§°Ü£¡");
+			logger.warning(url + "è¿æ¥å¤±è´¥ï¼");
 			logger.warning(Reggol.getStackTrace(e));
 
-			// ´ÎÊı×ÔÔö³¤
+			// æ¬¡æ•°è‡ªå¢é•¿
 			i++;
 
-			// ³¬¹ı4´Î³ÌĞòÍË³ö
+			// è¶…è¿‡4æ¬¡ç¨‹åºé€€å‡º
 			if (i == 5) {
-				logger.info("ËùÓĞurl¶¼Î´ÄÜÁ¬½ÓÉÏ£¬Çë¼ì²éÊı¾İ¿â¼°Í¨ĞÅÇé¿ö£¡");
-				logger.info("³ÌĞòÍË³ö£¡");
+				logger.info("æ‰€æœ‰urléƒ½æœªèƒ½è¿æ¥ä¸Šï¼Œè¯·æ£€æŸ¥æ•°æ®åº“åŠé€šä¿¡æƒ…å†µï¼");
+				logger.info("ç¨‹åºé€€å‡ºï¼");
 				System.exit(0);
 			}
 
-			// ³ö´íÊ±ÖØ¸´µ÷ÓÃÖ±ÖÁ³¬³ö×î´óÁ¬½Ó´ÎÊı
+			// å‡ºé”™æ—¶é‡å¤è°ƒç”¨ç›´è‡³è¶…å‡ºæœ€å¤§è¿æ¥æ¬¡æ•°
 			return this.getConnection();
 
 		}
@@ -87,13 +87,13 @@ public class Oracle {
 	 */
 	public PreparedStatement getPreparedStatement(Connection connection, String sql) {
 
-		// ´´½¨PreparedStatement
+		// åˆ›å»ºPreparedStatement
 		PreparedStatement preparedStatement = null;
 
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 
-			// Êä³öSQL
+			// è¾“å‡ºSQL
 			logger.info(sql);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -109,7 +109,7 @@ public class Oracle {
 	 */
 	public ResultSet getResultSet(PreparedStatement preparedStatement) {
 
-		// Ö´ĞĞ²éÑ¯
+		// æ‰§è¡ŒæŸ¥è¯¢
 		ResultSet resultSet = null;
 
 		try {
@@ -130,39 +130,39 @@ public class Oracle {
 	 */
 	public void close(ResultSet resultSet, PreparedStatement preparedStatement, Connection connection) {
 
-		// ¹Ø±ÕResultSet
+		// å…³é—­ResultSet
 		if (resultSet != null) {
 			try {
 				resultSet.close();
-				logger.info("ResultSetÒÑ¹Ø±Õ£¡");
+				logger.info("ResultSetå·²å…³é—­ï¼");
 			} catch (SQLException e) {
 				e.printStackTrace();
 				logger.warning(Reggol.getStackTrace(e));
 			}
 		}
 
-		// ¹Ø±ÕPreparedStatement
+		// å…³é—­PreparedStatement
 		if (preparedStatement != null) {
 			try {
 				preparedStatement.close();
-				logger.info("PreparedStatementÒÑ¹Ø±Õ£¡");
+				logger.info("PreparedStatementå·²å…³é—­ï¼");
 			} catch (SQLException e) {
 				e.printStackTrace();
 				logger.warning(Reggol.getStackTrace(e));
 			}
 		}
 
-		// ¹Ø±ÕConnection
+		// å…³é—­Connection
 		if (connection != null) {
 			try {
 				connection.close();
-				logger.info("ConnectionÒÑ¹Ø±Õ£¡");
+				logger.info("Connectionå·²å…³é—­ï¼");
 			} catch (SQLException e) {
 				e.printStackTrace();
 				logger.warning(Reggol.getStackTrace(e));
 			}
 		}
 
-		logger.info("OracleÒÑ¹Ø±Õ£¡");
+		logger.info("Oracleå·²å…³é—­ï¼");
 	}
 }

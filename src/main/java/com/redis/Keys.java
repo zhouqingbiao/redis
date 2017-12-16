@@ -9,10 +9,10 @@ public class Keys {
 
 	public static void main(String[] args) {
 
-		// »ñµÃkeys¼¯ºÏ
+		// è·å¾—keysé›†åˆ
 		Set<String> set = new Keys().getKeys("*");
 
-		// ±éÀúÊä³ökeys
+		// éå†è¾“å‡ºkeys
 		for (String string : set) {
 			System.out.println(string);
 		}
@@ -20,31 +20,31 @@ public class Keys {
 
 	public Set<String> getKeys(String keys) {
 
-		// »ñµÃJedisPool
+		// è·å¾—JedisPool
 		JedisPool jedisPool = new Redis().getJedisPool();
 
-		// »ñµÃJedis
+		// è·å¾—Jedis
 		Jedis jedis = jedisPool.getResource();
 
-		// ÅĞ¶ÏÊÇ·ñÁ¬½Ó³É¹¦
+		// åˆ¤æ–­æ˜¯å¦è¿æ¥æˆåŠŸ
 		if (("PONG").equals(jedis.ping())) {
-			System.out.println("RedisÁ¬½Ó³É¹¦£¡");
+			System.out.println("Redisè¿æ¥æˆåŠŸï¼");
 		}
 
-		// Ñ¡ÔñÊı¾İ¿â
+		// é€‰æ‹©æ•°æ®åº“
 		jedis.select(0);
 
-		// »ñÈ¡keys
+		// è·å–keys
 		Set<String> set = jedis.keys(keys);
 
-		// Êä³öµ±Ç°Êı¾İ¿âkeysÊıÁ¿
-		System.out.println("µ±Ç°Êı¾İ¿âkeysÊıÁ¿£º" + jedis.dbSize());
+		// è¾“å‡ºå½“å‰æ•°æ®åº“keysæ•°é‡
+		System.out.println("å½“å‰æ•°æ®åº“keysæ•°é‡ï¼š" + jedis.dbSize());
 
-		// ¹Ø±Õ
+		// å…³é—­
 		jedis.close();
 		jedisPool.close();
 
-		// ·µ»Økeys¼¯ºÏ
+		// è¿”å›keysé›†åˆ
 		return set;
 
 	}

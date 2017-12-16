@@ -12,32 +12,32 @@ import java.util.logging.Logger;
 
 public class Reggol {
 
-	// ¶¨Òå¾²Ì¬Logger¶ÔÏó
+	// å®šä¹‰é™æ€Loggerå¯¹è±¡
 	static Logger logger = Logger.getGlobal();
 
-	// ¶¨Òå¾²Ì¬FileHandler¶ÔÏó
+	// å®šä¹‰é™æ€FileHandlerå¯¹è±¡
 	static FileHandler fileHandler = null;
 
 	/**
-	 * »ñÈ¡Logger
+	 * è·å–Logger
 	 * 
 	 * @return Logger
 	 */
 	public synchronized static Logger getLogger() {
 
-		// Ê±¼ä¸ñÊ½»¯
+		// æ—¶é—´æ ¼å¼åŒ–
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-		// »ñÈ¡Ê±¼ä
+		// è·å–æ—¶é—´
 		String date = simpleDateFormat.format(new Date());
 
-		// ÎÄ¼ş¼ĞÂ·¾¶
+		// æ–‡ä»¶å¤¹è·¯å¾„
 		String pathname = System.getProperty("user.home") + System.getProperty("file.separator") + "log";
 
-		// ÈÕÖ¾Êä³öÂ·¾¶
+		// æ—¥å¿—è¾“å‡ºè·¯å¾„
 		String pattern = pathname + System.getProperty("file.separator") + date + ".log";
 
-		// ÊÇ·ñ×·¼Ó
+		// æ˜¯å¦è¿½åŠ 
 		boolean append = true;
 
 		try {
@@ -47,53 +47,53 @@ public class Reggol {
 		} catch (IOException e) {
 			e.printStackTrace();
 
-			// ³ö´íÊ±½¨Á¢ÎÄ¼ş¼Ğ²¢»Øµ÷·½·¨
+			// å‡ºé”™æ—¶å»ºç«‹æ–‡ä»¶å¤¹å¹¶å›è°ƒæ–¹æ³•
 			File file = new File(pathname);
 			file.mkdirs();
 			return getLogger();
 		}
 
-		// ÉèÖÃÈÕÖ¾¼¶±ğ
+		// è®¾ç½®æ—¥å¿—çº§åˆ«
 		fileHandler.setLevel(Level.ALL);
 
-		// ÉèÖÃÈÕÖ¾¸ñÊ½
+		// è®¾ç½®æ—¥å¿—æ ¼å¼
 		fileHandler.setFormatter(new Formatter() {
 			@Override
 			public String format(LogRecord record) {
 
-				// Ê±¼ä¸ñÊ½»¯
+				// æ—¶é—´æ ¼å¼åŒ–
 				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
-				// »ñÈ¡Ê±¼ä
+				// è·å–æ—¶é—´
 				String date = "[" + simpleDateFormat.format(new Date()) + "]";
 
-				// »ñÈ¡¼¶±ğĞÅÏ¢
+				// è·å–çº§åˆ«ä¿¡æ¯
 				String level = "[" + record.getLevel().toString() + "]";
 
-				// »ñÈ¡ÀàÃû×Ö
+				// è·å–ç±»åå­—
 				String sourceClassName = "[" + record.getSourceClassName() + "]";
 
-				// »ñÈ¡ÀàÃû×Ö
+				// è·å–ç±»åå­—
 				String sourceMethodName = "[" + record.getSourceMethodName() + "]";
 
-				// »ñÈ¡ÏûÏ¢
+				// è·å–æ¶ˆæ¯
 				String message = "[" + record.getMessage() + "]";
 
-				// ·µ»ØĞÅÏ¢
+				// è¿”å›ä¿¡æ¯
 				return date + " " + level + " " + sourceClassName + " " + sourceMethodName + " " + message
 						+ System.getProperty("line.separator");
 			}
 		});
 
-		// Ìí¼ÓFileHandlerµ½Logger
+		// æ·»åŠ FileHandleråˆ°Logger
 		logger.addHandler(fileHandler);
 
-		// ·µ»ØLogger
+		// è¿”å›Logger
 		return logger;
 	}
 
 	/**
-	 * »ñÈ¡´íÎóĞÅÏ¢
+	 * è·å–é”™è¯¯ä¿¡æ¯
 	 * 
 	 * @param e
 	 * @return
@@ -101,10 +101,10 @@ public class Reggol {
 	public synchronized static String getStackTrace(Exception e) {
 		StringBuilder stringBuilder = new StringBuilder();
 
-		// »ñÈ¡´íÎóÍ·
+		// è·å–é”™è¯¯å¤´
 		stringBuilder.append(e.toString()).append(System.getProperty("line.separator"));
 
-		// »ñÈ¡´íÎóÄÚÈİ
+		// è·å–é”™è¯¯å†…å®¹
 		for (StackTraceElement traceElement : e.getStackTrace())
 			stringBuilder.append("\tat " + traceElement).append(System.getProperty("line.separator"));
 		return stringBuilder.toString();

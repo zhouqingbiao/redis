@@ -15,25 +15,25 @@ import com.log.Reggol;
 
 @WebService
 public class Jws {
-	// »ñµÃLogger
+	// è·å¾—Logger
 	static Logger logger = Reggol.getLogger();
 
 	private boolean checkUserAndPassword(String user, String password) {
 
-		// »ñÈ¡PropertiesÊı¾İ
+		// è·å–Propertiesæ•°æ®
 		Properties properties = new Properties();
 		try {
 			properties.load(Jws.class.getResourceAsStream("Jws.properties"));
 
-			// userºÍpassword¶¼²»ÄÜÎª¿Õ
+			// userå’Œpasswordéƒ½ä¸èƒ½ä¸ºç©º
 			if (null == user || null == password || "".equals(user) || "".equals(password)) {
-				logger.info("Ğ£ÑéÊ§°Ü£¡");
+				logger.info("æ ¡éªŒå¤±è´¥ï¼");
 				return false;
 			}
 
-			// ÑéÖ¤³É¹¦·µ»Øtrue
+			// éªŒè¯æˆåŠŸè¿”å›true
 			if (password.equals(properties.getProperty(user))) {
-				logger.info("Ğ£Ñé³É¹¦£¡");
+				logger.info("æ ¡éªŒæˆåŠŸï¼");
 				return true;
 			}
 		} catch (IOException e) {
@@ -49,7 +49,7 @@ public class Jws {
 		logger.info("user:" + user);
 		logger.info("password:" + password);
 
-		// Ğ£ÑéÃÜÂë
+		// æ ¡éªŒå¯†ç 
 		if (checkUserAndPassword(user, password) == false) {
 			return jSONArray.toString();
 		}

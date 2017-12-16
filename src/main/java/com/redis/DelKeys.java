@@ -10,53 +10,53 @@ import redis.clients.jedis.JedisPool;
 
 public class DelKeys {
 
-	// »ñÈ¡Logger
+	// è·å–Logger
 	static Logger logger = Reggol.getLogger();
 
 	public static void main(String[] args) {
 
-		// É¾³ıkeys
+		// åˆ é™¤keys
 		new DelKeys().delKeys("*");
 	}
 
 	/**
-	 * ÖğÌõÉ¾³ıkey
+	 * é€æ¡åˆ é™¤key
 	 * 
 	 * @param keys
 	 */
 	public void delKeys(String keys) {
 
-		// »ñµÃJedisPool
+		// è·å¾—JedisPool
 		JedisPool jedisPool = new Redis().getJedisPool();
 
-		// »ñµÃJedis
+		// è·å¾—Jedis
 		Jedis jedis = jedisPool.getResource();
 
-		// ÅĞ¶ÏÊÇ·ñÁ¬½Ó³É¹¦
+		// åˆ¤æ–­æ˜¯å¦è¿æ¥æˆåŠŸ
 		if (("PONG").equals(jedis.ping())) {
-			logger.info("RedisÁ¬½Ó³É¹¦£¡");
+			logger.info("Redisè¿æ¥æˆåŠŸï¼");
 		}
 
-		// Ñ¡ÔñÊı¾İ¿â
+		// é€‰æ‹©æ•°æ®åº“
 		int index = 0;
 		jedis.select(index);
-		logger.info("Ñ¡Ôñ" + index + "ºÅRedisÊı¾İ¿â");
+		logger.info("é€‰æ‹©" + index + "å·Redisæ•°æ®åº“");
 
-		// »ñÈ¡keys
+		// è·å–keys
 		Set<String> set = jedis.keys(keys);
 
-		// ±éÀúÉ¾³ıkeys
+		// éå†åˆ é™¤keys
 		for (String string : set) {
 			jedis.del(string);
 		}
 
-		// Êä³öµ±Ç°Êı¾İ¿âkeysÊıÁ¿
-		logger.info("µ±Ç°Êı¾İ¿âkeysÊıÁ¿£º" + jedis.dbSize());
+		// è¾“å‡ºå½“å‰æ•°æ®åº“keysæ•°é‡
+		logger.info("å½“å‰æ•°æ®åº“keysæ•°é‡ï¼š" + jedis.dbSize());
 
-		// ¹Ø±Õ
+		// å…³é—­
 		jedis.close();
 		jedisPool.close();
-		logger.info("RedisÒÑ¹Ø±Õ£¡");
+		logger.info("Rediså·²å…³é—­ï¼");
 
 	}
 }

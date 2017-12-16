@@ -11,27 +11,27 @@ import com.log.Reggol;
 
 public class Publish {
 
-	// »ñµÃLogger
+	// è·å¾—Logger
 	static Logger logger = Reggol.getLogger();
 
 	public static void main(String[] args) {
 
-		// Æô¶¯¶¨Ê±ÈÎÎñ0 0 0/6 * * ?
+		// å¯åŠ¨å®šæ—¶ä»»åŠ¡0 0 0/6 * * ?
 		Job.start();
 
 		String address = null;
 		try {
-			// »ñÈ¡IPµØÖ·
+			// è·å–IPåœ°å€
 			address = Inet4Address.getLocalHost().getHostAddress();
 
-			// ×é×°WebServiceµØÖ·
+			// ç»„è£…WebServiceåœ°å€
 			address = "http://" + address + "/Jws";
 
-			// ·¢²¼WebService
+			// å‘å¸ƒWebService
 			Object implementor = new Jws();
 			Endpoint.publish(address, implementor);
 
-			// Êä³öWebServiceµØÖ·¼°ÈçºÎ½âÎö²Ù×÷
+			// è¾“å‡ºWebServiceåœ°å€åŠå¦‚ä½•è§£ææ“ä½œ
 			logger.info(address + "?wsdl");
 			logger.info("wsimport -keep " + address + "?wsdl");
 		} catch (UnknownHostException e) {

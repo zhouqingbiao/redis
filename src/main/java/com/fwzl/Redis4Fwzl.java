@@ -21,56 +21,56 @@ import redis.clients.jedis.JedisPool;
 
 public class Redis4Fwzl {
 
-	// »ñµÃLogger
+	// è·å¾—Logger
 	static Logger logger = Reggol.getLogger();
 
 	public ArrayList<Map<String, String>> getFwzl4Redis(String fwzl) {
 
-		// ¹ıÂËÀ¬»øĞÅÏ¢
+		// è¿‡æ»¤åƒåœ¾ä¿¡æ¯
 		// TODO
 
-		// Redis¿ªÊ¼Ê±¼ä
+		// Rediså¼€å§‹æ—¶é—´
 		long startTime4Redis = System.nanoTime();
 
-		// »ñµÃJedisPool
+		// è·å¾—JedisPool
 		JedisPool jedisPool = new Redis().getJedisPool();
 
-		// »ñµÃJedis
+		// è·å¾—Jedis
 		Jedis jedis = jedisPool.getResource();
 
-		// ÅĞ¶ÏÊÇ·ñÁ¬½Ó³É¹¦
+		// åˆ¤æ–­æ˜¯å¦è¿æ¥æˆåŠŸ
 		if (("PONG").equals(jedis.ping())) {
-			logger.info("RedisÁ¬½Ó³É¹¦£¡");
+			logger.info("Redisè¿æ¥æˆåŠŸï¼");
 		}
 
-		// Ñ¡ÔñÊı¾İ¿â
+		// é€‰æ‹©æ•°æ®åº“
 		int index = 0;
 		jedis.select(index);
-		logger.info("Ñ¡Ôñ" + index + "ºÅRedisÊı¾İ¿â");
+		logger.info("é€‰æ‹©" + index + "å·Redisæ•°æ®åº“");
 
-		// ²éÑ¯Êı¾İ¿â
+		// æŸ¥è¯¢æ•°æ®åº“
 		Set<String> set = jedis.keys(fwzl);
 
 		if (set.isEmpty()) {
-			logger.info("²éÑ¯½á¹ûÎª¿Õ£¡");
+			logger.info("æŸ¥è¯¢ç»“æœä¸ºç©ºï¼");
 			return null;
 		}
 
 		StringBuffer fwzlStringBuffer = new StringBuffer();
 		StringBuffer idStringBuffer = new StringBuffer();
 
-		// ¶¨ÒåidList
+		// å®šä¹‰idList
 		List<String> idList = new ArrayList<String>();
 
-		// ×é×°StringBuffer
+		// ç»„è£…StringBuffer
 		for (String fwzlString : set) {
-			// ×é×°fwzlStringBuffer
+			// ç»„è£…fwzlStringBuffer
 			fwzlStringBuffer.append(fwzlString);
 
-			// »ñÈ¡RedisList
+			// è·å–RedisList
 			List<String> list = jedis.lrange(fwzlString, 0, jedis.llen(fwzlString));
 
-			// ×é×°idStringBuffer
+			// ç»„è£…idStringBuffer
 			for (String idString : list) {
 
 				// add idString to idList
@@ -82,89 +82,89 @@ public class Redis4Fwzl {
 			fwzlStringBuffer.append(",");
 		}
 
-		// É¾³ı×îºó×Ö·û
+		// åˆ é™¤æœ€åå­—ç¬¦
 		idStringBuffer.deleteCharAt(idStringBuffer.length() - 1);
 		fwzlStringBuffer.deleteCharAt(fwzlStringBuffer.length() - 1);
 
-		// Êä³öStringBuffer
-		logger.info("ID£º" + idStringBuffer);
-		logger.info("FWZL£º" + fwzlStringBuffer);
+		// è¾“å‡ºStringBuffer
+		logger.info("IDï¼š" + idStringBuffer);
+		logger.info("FWZLï¼š" + fwzlStringBuffer);
 
-		// ¹Ø±ÕRedis
+		// å…³é—­Redis
 		jedis.close();
 		jedisPool.close();
-		logger.info("RedisÒÑ¹Ø±Õ£¡");
+		logger.info("Rediså·²å…³é—­ï¼");
 
-		// RedisÍ£Ö¹Ê±¼ä
+		// Redisåœæ­¢æ—¶é—´
 		long stopTime4Redis = System.nanoTime();
-		logger.info("¿ªÊ¼Ê±¼ä£¨Redis£©£º" + startTime4Redis);
-		logger.info("Í£Ö¹Ê±¼ä£¨Redis£©£º" + stopTime4Redis);
+		logger.info("å¼€å§‹æ—¶é—´ï¼ˆRedisï¼‰ï¼š" + startTime4Redis);
+		logger.info("åœæ­¢æ—¶é—´ï¼ˆRedisï¼‰ï¼š" + stopTime4Redis);
 
-		// Redis×ÜÊ±¼äÏûºÄ
-		logger.info("ÔËĞĞÊ±¼ä£¨Redis£©£º" + (stopTime4Redis - startTime4Redis) + "ÄÉÃë");
-		logger.info("ÔËĞĞÊ±¼ä£¨Redis£©£º" + (stopTime4Redis - startTime4Redis) / 1000000 + "ºÁÃë");
-		logger.info("ÔËĞĞÊ±¼ä£¨Redis£©£º" + (stopTime4Redis - startTime4Redis) / 1000000000 + "Ãë");
-		logger.info("RedisÌõÊı£º" + set.size());
+		// Redisæ€»æ—¶é—´æ¶ˆè€—
+		logger.info("è¿è¡Œæ—¶é—´ï¼ˆRedisï¼‰ï¼š" + (stopTime4Redis - startTime4Redis) + "çº³ç§’");
+		logger.info("è¿è¡Œæ—¶é—´ï¼ˆRedisï¼‰ï¼š" + (stopTime4Redis - startTime4Redis) / 1000000 + "æ¯«ç§’");
+		logger.info("è¿è¡Œæ—¶é—´ï¼ˆRedisï¼‰ï¼š" + (stopTime4Redis - startTime4Redis) / 1000000000 + "ç§’");
+		logger.info("Redisæ¡æ•°ï¼š" + set.size());
 
 		// ----------------------------------------------------------------------------------------------------------
 
-		// Oracle¿ªÊ¼Ê±¼ä
+		// Oracleå¼€å§‹æ—¶é—´
 		long startTime4Oracle = System.nanoTime();
 
-		// »ñµÃOracleÊı¾İ
+		// è·å¾—Oracleæ•°æ®
 		ArrayList<Map<String, String>> arrayList = this.getFwzl4Oracle(idList);
 
-		// OracleÍ£Ö¹Ê±¼ä
+		// Oracleåœæ­¢æ—¶é—´
 		long stopTime4Oracle = System.nanoTime();
-		logger.info("¿ªÊ¼Ê±¼ä£¨Oracle£©£º" + startTime4Oracle);
-		logger.info("Í£Ö¹Ê±¼ä£¨Oracle£©£º" + stopTime4Oracle);
+		logger.info("å¼€å§‹æ—¶é—´ï¼ˆOracleï¼‰ï¼š" + startTime4Oracle);
+		logger.info("åœæ­¢æ—¶é—´ï¼ˆOracleï¼‰ï¼š" + stopTime4Oracle);
 
-		// Oracle×ÜÊ±¼äÏûºÄ
-		logger.info("ÔËĞĞÊ±¼ä£¨Oracle£©£º" + (stopTime4Oracle - startTime4Oracle) + "ÄÉÃë");
-		logger.info("ÔËĞĞÊ±¼ä£¨Oracle£©£º" + (stopTime4Oracle - startTime4Oracle) / 1000000 + "ºÁÃë");
-		logger.info("ÔËĞĞÊ±¼ä£¨Oracle£©£º" + (stopTime4Oracle - startTime4Oracle) / 1000000000 + "Ãë");
-		logger.info("OracleÌõÊı£º" + arrayList.size());
+		// Oracleæ€»æ—¶é—´æ¶ˆè€—
+		logger.info("è¿è¡Œæ—¶é—´ï¼ˆOracleï¼‰ï¼š" + (stopTime4Oracle - startTime4Oracle) + "çº³ç§’");
+		logger.info("è¿è¡Œæ—¶é—´ï¼ˆOracleï¼‰ï¼š" + (stopTime4Oracle - startTime4Oracle) / 1000000 + "æ¯«ç§’");
+		logger.info("è¿è¡Œæ—¶é—´ï¼ˆOracleï¼‰ï¼š" + (stopTime4Oracle - startTime4Oracle) / 1000000000 + "ç§’");
+		logger.info("Oracleæ¡æ•°ï¼š" + arrayList.size());
 		logger.info(
 				"----------------------------------------------------------------------------------------------------------");
 
 		// ----------------------------------------------------------------------------------------------------------
 
-		logger.info("Redis²éÑ¯¹Ø¼ü×Ö£º" + fwzl);
-		logger.info("RedisÏûºÄÊ±¼ä£º" + (stopTime4Redis - startTime4Redis) + "ÄÉÃë");
-		logger.info("RedisÏûºÄÊ±¼ä£º" + (stopTime4Redis - startTime4Redis) / 1000000 + "ºÁÃë");
-		logger.info("RedisÏûºÄÊ±¼ä£º" + (stopTime4Redis - startTime4Redis) / 1000000000 + "Ãë");
+		logger.info("RedisæŸ¥è¯¢å…³é”®å­—ï¼š" + fwzl);
+		logger.info("Redisæ¶ˆè€—æ—¶é—´ï¼š" + (stopTime4Redis - startTime4Redis) + "çº³ç§’");
+		logger.info("Redisæ¶ˆè€—æ—¶é—´ï¼š" + (stopTime4Redis - startTime4Redis) / 1000000 + "æ¯«ç§’");
+		logger.info("Redisæ¶ˆè€—æ—¶é—´ï¼š" + (stopTime4Redis - startTime4Redis) / 1000000000 + "ç§’");
 		logger.info(
 				"----------------------------------------------------------------------------------------------------------");
-		logger.info("Oracle¾«È·²éÑ¯£º" + idStringBuffer);
-		logger.info("OracleÏûºÄÊ±¼ä£º" + (stopTime4Oracle - startTime4Oracle) + "ÄÉÃë");
-		logger.info("OracleÏûºÄÊ±¼ä£º" + (stopTime4Oracle - startTime4Oracle) / 1000000 + "ºÁÃë");
-		logger.info("OracleÏûºÄÊ±¼ä£º" + (stopTime4Oracle - startTime4Oracle) / 1000000000 + "Ãë");
+		logger.info("Oracleç²¾ç¡®æŸ¥è¯¢ï¼š" + idStringBuffer);
+		logger.info("Oracleæ¶ˆè€—æ—¶é—´ï¼š" + (stopTime4Oracle - startTime4Oracle) + "çº³ç§’");
+		logger.info("Oracleæ¶ˆè€—æ—¶é—´ï¼š" + (stopTime4Oracle - startTime4Oracle) / 1000000 + "æ¯«ç§’");
+		logger.info("Oracleæ¶ˆè€—æ—¶é—´ï¼š" + (stopTime4Oracle - startTime4Oracle) / 1000000000 + "ç§’");
 		logger.info(
 				"----------------------------------------------------------------------------------------------------------");
-		logger.info("×ÜÏûºÄÊ±¼ä£º" + ((stopTime4Redis - startTime4Redis) + (stopTime4Oracle - startTime4Oracle)) + "ÄÉÃë");
-		logger.info("×ÜÏûºÄÊ±¼ä£º"
+		logger.info("æ€»æ¶ˆè€—æ—¶é—´ï¼š" + ((stopTime4Redis - startTime4Redis) + (stopTime4Oracle - startTime4Oracle)) + "çº³ç§’");
+		logger.info("æ€»æ¶ˆè€—æ—¶é—´ï¼š"
 				+ ((stopTime4Redis - startTime4Redis) / 1000000 + (stopTime4Oracle - startTime4Oracle) / 1000000)
-				+ "ºÁÃë");
-		logger.info("×ÜÏûºÄÊ±¼ä£º"
+				+ "æ¯«ç§’");
+		logger.info("æ€»æ¶ˆè€—æ—¶é—´ï¼š"
 				+ ((stopTime4Redis - startTime4Redis) / 1000000000 + (stopTime4Oracle - startTime4Oracle) / 1000000000)
-				+ "Ãë");
+				+ "ç§’");
 		return arrayList;
 	}
 
 	public ArrayList<Map<String, String>> getFwzl4Oracle(List<String> list) {
 
-		// ¶¨ÒåOralce²¢»ñÈ¡Á¬½Ó
+		// å®šä¹‰Oralceå¹¶è·å–è¿æ¥
 		Oracle jracle = new Oracle();
 		Connection connection = jracle.getConnection();
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 
-		// Êı¾İ´æÈëMap
+		// æ•°æ®å­˜å…¥Map
 		ArrayList<Map<String, String>> arrayList = new ArrayList<Map<String, String>>();
 
-		// ListIterator»¯
+		// ListIteratoråŒ–
 		Iterator<String> iterator = list.iterator();
-		// Æ´½Ósql
+		// æ‹¼æ¥sql
 		StringBuffer sql = new StringBuffer();
 		sql.append(
 				"select t.* from hz_gis.tps_fw t where t.lsbz = 0 and t.fwzl is not null and t.fwsmzq = 1201 and t.id in ");
@@ -174,7 +174,7 @@ public class Redis4Fwzl {
 				sql.append("?");
 				sql.append(",");
 
-				// ´¦ÀíORA-01795´íÎó»ò´ïµ½×î´óÖµ´¦Àí
+				// å¤„ç†ORA-01795é”™è¯¯æˆ–è¾¾åˆ°æœ€å¤§å€¼å¤„ç†
 				if (i % 1000 == 0 || i == list.size()) {
 					sql.deleteCharAt(sql.length() - 1);
 					sql.append(")");
@@ -182,7 +182,7 @@ public class Redis4Fwzl {
 					preparedStatement = jracle.getPreparedStatement(connection, sql.toString());
 
 					try {
-						// ÉèÖÃÎÊºÅµÄÖµ
+						// è®¾ç½®é—®å·çš„å€¼
 						for (int j = 1; j <= i; j++) {
 							preparedStatement.setString(j, iterator.next());
 							iterator.remove();
@@ -198,7 +198,7 @@ public class Redis4Fwzl {
 					try {
 						while (resultSet.next()) {
 							map = new HashMap<String, String>();
-							// »ñÈ¡×ÜÁĞÊı²¢Ñ­»·±£´æ½øMap
+							// è·å–æ€»åˆ—æ•°å¹¶å¾ªç¯ä¿å­˜è¿›Map
 							for (int j = 1; j <= resultSet.getMetaData().getColumnCount(); j++) {
 								map.put(resultSet.getMetaData().getColumnName(j), resultSet.getString(j));
 							}
@@ -207,12 +207,12 @@ public class Redis4Fwzl {
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
-					// ÖØÖÃsql
+					// é‡ç½®sql
 					sql.setLength(0);
 					sql.append(
 							"select t.* from hz_gis.tps_fw t where t.lsbz = 0 and t.fwzl is not null and t.fwsmzq = 1201 and t.id in ");
 					sql.append("(");
-					// ÖØÖÃi
+					// é‡ç½®i
 					i = 0;
 				}
 			}

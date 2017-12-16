@@ -10,7 +10,7 @@ import redis.clients.jedis.JedisPool;
 
 public class Redis {
 
-	// »ñµÃLogger
+	// è·å¾—Logger
 	static Logger logger = Reggol.getLogger();
 
 	/**
@@ -19,32 +19,32 @@ public class Redis {
 	 */
 	public JedisPool getJedisPool() {
 
-		// ¶¨ÒåGenericObjectPoolConfig
+		// å®šä¹‰GenericObjectPoolConfig
 		GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
-		logger.info("³É¹¦¶¨ÒåGenericObjectPoolConfig");
+		logger.info("æˆåŠŸå®šä¹‰GenericObjectPoolConfig");
 
-		// ×î´óÁ¬½ÓÊı
+		// æœ€å¤§è¿æ¥æ•°
 		int maxTotal = 1024;
 		poolConfig.setMaxTotal(maxTotal);
-		logger.info("×î´óÁ¬½ÓÊıÉèÖÃÎª" + maxTotal);
+		logger.info("æœ€å¤§è¿æ¥æ•°è®¾ç½®ä¸º" + maxTotal);
 
-		// ·ÃÎÊµØÖ·
+		// è®¿é—®åœ°å€
 		String host = "localhost";
 
-		// ¶Ë¿Ú
+		// ç«¯å£
 		int port = 6379;
 
-		// ³¬Ê±Ê±¼ä£¬µ¥Î»£ººÁÃë
+		// è¶…æ—¶æ—¶é—´ï¼Œå•ä½ï¼šæ¯«ç§’
 		int timeout = 10000;
 
-		// ¶¨ÒåJedisPool
+		// å®šä¹‰JedisPool
 		JedisPool jedisPool = new JedisPool(poolConfig, host, port, timeout);
-		logger.info("³É¹¦¶¨ÒåJedisPool");
+		logger.info("æˆåŠŸå®šä¹‰JedisPool");
 		logger.info("host" + "=" + host);
 		logger.info("port" + "=" + port);
 		logger.info("timeout" + "=" + timeout);
 
-		// ·µ»ØJedisPool
+		// è¿”å›JedisPool
 		return jedisPool;
 	}
 }

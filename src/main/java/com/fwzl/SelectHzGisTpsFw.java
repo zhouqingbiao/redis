@@ -19,7 +19,7 @@ import redis.clients.jedis.JedisPool;
 
 public class SelectHzGisTpsFw implements Job {
 
-	// »ñµÃLogger
+	// è·å¾—Logger
 	static Logger logger = Reggol.getLogger();
 
 	public static void main(String[] args) {
@@ -27,69 +27,69 @@ public class SelectHzGisTpsFw implements Job {
 	}
 
 	/**
-	 * OracleÖĞ·¿Îİ×øÂäDistinctCountÖµ×÷ÎªRedisµÄkey
+	 * Oracleä¸­æˆ¿å±‹åè½DistinctCountå€¼ä½œä¸ºRedisçš„key
 	 */
 	public void addKey() {
 
-		// »ñÈ¡distinct_count_fwzl×ÜÊı
+		// è·å–distinct_count_fwzlæ€»æ•°
 		String sql = "select count(distinct(t.fwzl)) distinct_count from hz_gis.tps_fw t where t.lsbz = 0 and t.fwzl is not null and t.fwsmzq = 1201";
 
 		int distinctCount = this.getDistinctCount(sql);
 
-		// ¶¨ÒåRedis
+		// å®šä¹‰Redis
 		JedisPool jedisPool = new Redis().getJedisPool();
 
 		Jedis jedis = jedisPool.getResource();
 
-		// ÅĞ¶ÏÊÇ·ñÁ¬½Ó³É¹¦
+		// åˆ¤æ–­æ˜¯å¦è¿æ¥æˆåŠŸ
 		if (("PONG").equals(jedis.ping())) {
-			logger.info("RedisÁ¬½Ó³É¹¦£¡");
+			logger.info("Redisè¿æ¥æˆåŠŸï¼");
 		}
 
-		// Ñ¡ÔñÊı¾İ¿â
+		// é€‰æ‹©æ•°æ®åº“
 		int index = 0;
 		jedis.select(index);
-		logger.info("Ñ¡Ôñ" + index + "ºÅRedisÊı¾İ¿â");
+		logger.info("é€‰æ‹©" + index + "å·Redisæ•°æ®åº“");
 
-		// »ñÈ¡Redis_keys×ÜÊı
+		// è·å–Redis_keysæ€»æ•°
 		long dbSize = jedis.dbSize();
 		logger.info("Redis" + ":" + dbSize);
 
-		// ¿ªÊ¼Ê±¼ä
+		// å¼€å§‹æ—¶é—´
 		long startTime = System.nanoTime();
-		logger.info("¿ªÊ¼Ê±¼ä£º" + startTime);
+		logger.info("å¼€å§‹æ—¶é—´ï¼š" + startTime);
 
-		// Redis²»´æÔÚÔòÈ¥35¿â²éÑ¯--Ö´ĞĞÄ£¿é
+		// Redisä¸å­˜åœ¨åˆ™å»35åº“æŸ¥è¯¢--æ‰§è¡Œæ¨¡å—
 		if (distinctCount != dbSize) {
 
-			// ÌõÊı²»¶Ô³ÆÊä³ö
+			// æ¡æ•°ä¸å¯¹ç§°è¾“å‡º
 			logger.info("Oracle:" + distinctCount + " != " + dbSize + ":" + "Redis");
 
-			// ¶¨ÒåOralce²¢»ñÈ¡Á¬½Ó
+			// å®šä¹‰Oralceå¹¶è·å–è¿æ¥
 			Oracle jracle = new Oracle();
 			Connection connection = jracle.getConnection();
 
-			// Redis²»´æÔÚÔòÈ¥35¿â²éÑ¯--²éÑ¯Óï¾ä
+			// Redisä¸å­˜åœ¨åˆ™å»35åº“æŸ¥è¯¢--æŸ¥è¯¢è¯­å¥
 			sql = "select t.id, t.fwzl from hz_gis.tps_fw t where t.lsbz = 0 and t.fwzl is not null and t.fwsmzq = 1201";
 
-			// ²»´æÔÚ²ÅÖ´ĞĞsql
+			// ä¸å­˜åœ¨æ‰æ‰§è¡Œsql
 			PreparedStatement preparedStatement = jracle.getPreparedStatement(connection, sql);
 			ResultSet resultSet = jracle.getResultSet(preparedStatement);
 
-			// É¾³ıµ±Ç°Êı¾İ¿âËùÓĞkey
+			// åˆ é™¤å½“å‰æ•°æ®åº“æ‰€æœ‰key
 			jedis.flushDB();
-			logger.info("µ±Ç°RedisÊı¾İ¿âkeyÒÑÉ¾³ı");
+			logger.info("å½“å‰Redisæ•°æ®åº“keyå·²åˆ é™¤");
 
-			// ĞÂÔöËùÓĞkeys
+			// æ–°å¢æ‰€æœ‰keys
 			try {
-				// ¼ÇÂ¼OracleÊı¾İÁ¿ÌõÊı
+				// è®°å½•Oracleæ•°æ®é‡æ¡æ•°
 				int count = 0;
 				while (resultSet.next()) {
 
-					// ¼ÓÈëRedisList
+					// åŠ å…¥RedisList
 					jedis.lpush(resultSet.getString("FWZL"), resultSet.getString("ID"));
 
-					// Êı¾İÁ¿×ÔÔö³¤
+					// æ•°æ®é‡è‡ªå¢é•¿
 					count++;
 					if (count % 100000 == 0) {
 						logger.info(String.valueOf(count));
@@ -103,57 +103,57 @@ public class SelectHzGisTpsFw implements Job {
 				jracle.close(resultSet, preparedStatement, connection);
 			}
 
-			// ÖØĞÂ»ñÈ¡µ±Ç°Êı¾İ¿âËùÓĞkey
+			// é‡æ–°è·å–å½“å‰æ•°æ®åº“æ‰€æœ‰key
 			dbSize = jedis.dbSize();
 
 		} else {
-			// ÌõÊı¶Ô³ÆÊä³ö
+			// æ¡æ•°å¯¹ç§°è¾“å‡º
 			logger.info("Oracle:" + distinctCount + " == " + dbSize + ":" + "Redis");
 		}
 
-		// ±£´æÊı¾İ
+		// ä¿å­˜æ•°æ®
 		jedis.save();
 
-		// ¹Ø±ÕRedis
+		// å…³é—­Redis
 		jedis.close();
 		jedisPool.close();
-		logger.info("RedisÒÑ¹Ø±Õ£¡");
+		logger.info("Rediså·²å…³é—­ï¼");
 
-		// Í£Ö¹Ê±¼ä
+		// åœæ­¢æ—¶é—´
 		long stopTime = System.nanoTime();
-		logger.info("Í£Ö¹Ê±¼ä£º" + stopTime);
+		logger.info("åœæ­¢æ—¶é—´ï¼š" + stopTime);
 
-		// ×ÜÊ±¼äÏûºÄ
-		logger.info("ÔËĞĞÊ±¼ä£º" + (stopTime - startTime) + "ÄÉÃë");
-		logger.info("ÔËĞĞÊ±¼ä£º" + (stopTime - startTime) / 1000000 + "ºÁÃë");
-		logger.info("ÔËĞĞÊ±¼ä£º" + (stopTime - startTime) / 1000000000 + "Ãë");
+		// æ€»æ—¶é—´æ¶ˆè€—
+		logger.info("è¿è¡Œæ—¶é—´ï¼š" + (stopTime - startTime) + "çº³ç§’");
+		logger.info("è¿è¡Œæ—¶é—´ï¼š" + (stopTime - startTime) / 1000000 + "æ¯«ç§’");
+		logger.info("è¿è¡Œæ—¶é—´ï¼š" + (stopTime - startTime) / 1000000000 + "ç§’");
 
-		logger.info("OracleÌõÊı£º" + distinctCount);
+		logger.info("Oracleæ¡æ•°ï¼š" + distinctCount);
 
-		logger.info("RedisÌõÊı£º" + dbSize);
+		logger.info("Redisæ¡æ•°ï¼š" + dbSize);
 
 	}
 
 	/**
-	 * »ñÈ¡·¿Îİ×øÂäDistinctCountÊıÁ¿
+	 * è·å–æˆ¿å±‹åè½DistinctCountæ•°é‡
 	 * 
 	 * @param sql
 	 * @return int
 	 */
 	public int getDistinctCount(String sql) {
-		// ¶¨ÒåOralce²¢»ñÈ¡Á¬½Ó
+		// å®šä¹‰Oralceå¹¶è·å–è¿æ¥
 		Oracle jracle = new Oracle();
 		Connection connection = jracle.getConnection();
 
 		PreparedStatement preparedStatement = jracle.getPreparedStatement(connection, sql);
 		ResultSet resultSet = jracle.getResultSet(preparedStatement);
 
-		// »ñÈ¡·¿Îİ×øÂäDistinctCountÊıÁ¿
+		// è·å–æˆ¿å±‹åè½DistinctCountæ•°é‡
 		int distinctCount = 0;
 		try {
 			while (resultSet.next()) {
 				distinctCount = resultSet.getInt(1);
-				logger.info("Oracle·¿Îİ×øÂäDistinctCountÊıÁ¿£º" + distinctCount);
+				logger.info("Oracleæˆ¿å±‹åè½DistinctCountæ•°é‡ï¼š" + distinctCount);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -162,14 +162,14 @@ public class SelectHzGisTpsFw implements Job {
 			jracle.close(resultSet, preparedStatement, connection);
 		}
 
-		// ·µ»Ø·¿Îİ×øÂäDistinctCountÊıÁ¿
+		// è¿”å›æˆ¿å±‹åè½DistinctCountæ•°é‡
 		return distinctCount;
 	}
 
 	public void execute(JobExecutionContext context) throws JobExecutionException {
-		logger.info("¶¨Ê±ÈÎÎñ¿ªÊ¼£¡");
+		logger.info("å®šæ—¶ä»»åŠ¡å¼€å§‹ï¼");
 		addKey();
-		logger.info("¶¨Ê±ÈÎÎñ½áÊø£¡");
+		logger.info("å®šæ—¶ä»»åŠ¡ç»“æŸï¼");
 	}
 
 }

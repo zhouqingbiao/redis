@@ -13,7 +13,7 @@ import com.fwzl.SelectHzGisTpsFw;
 
 public class Job {
 	/**
-	 * 定时任务
+	 * 瀹氭椂浠诲姟
 	 */
 	public static void start() {
 
