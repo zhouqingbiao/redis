@@ -11,8 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import com.oracle.Oracle;
-
 public class Reggol {
 
 	// 定义静态Logger对象
@@ -40,7 +38,7 @@ public class Reggol {
 		// 获取Properties数据
 		Properties properties = new Properties();
 		try {
-			properties.load(Oracle.class.getResourceAsStream("Reggol.properties"));
+			properties.load(Reggol.class.getResourceAsStream("Reggol.properties"));
 			pathname = properties.getProperty("pathname");
 		} catch (IOException e) {
 			e.printStackTrace();
