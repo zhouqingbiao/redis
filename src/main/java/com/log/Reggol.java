@@ -4,11 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+
+import com.oracle.Oracle;
 
 public class Reggol {
 
@@ -32,7 +35,20 @@ public class Reggol {
 		String date = simpleDateFormat.format(new Date());
 
 		// 文件夹路径
-		String pathname = System.getProperty("user.home") + System.getProperty("file.separator") + "log";
+		String pathname = null;
+
+		// 获取Properties数据
+		Properties properties = new Properties();
+		try {
+			properties.load(Oracle.class.getResourceAsStream("Reggol.properties"));
+			pathname = properties.getProperty("pathname");
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.warning(Reggol.getStackTrace(e));
+
+			// 出错时使用默认路径
+			pathname = System.getProperty("user.home") + System.getProperty("file.separator") + "log";
+		}
 
 		// 日志输出路径
 		String pattern = pathname + System.getProperty("file.separator") + date + ".log";
