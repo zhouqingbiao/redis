@@ -39,7 +39,15 @@ public class SelectHzGisTpsFw implements Job {
 		// 定义Redis
 		JedisPool jedisPool = new Redis().getJedisPool();
 
-		Jedis jedis = jedisPool.getResource();
+		Jedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info("Redis定义失败！请检查Redis是否正常运行！");
+			logger.warning(Reggol.getStackTrace(e));
+			return;
+		}
 
 		// 判断是否连接成功
 		if (("PONG").equals(jedis.ping())) {

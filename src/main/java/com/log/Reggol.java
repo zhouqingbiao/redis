@@ -32,20 +32,28 @@ public class Reggol {
 		// 获取时间
 		String date = simpleDateFormat.format(new Date());
 
-		// 文件夹路径
+		// 路径
 		String pathname = null;
 
 		// 获取Properties数据
 		Properties properties = new Properties();
 		try {
 			properties.load(Reggol.class.getResourceAsStream("Reggol.properties"));
-			pathname = properties.getProperty("pathname");
+
+			// 获取自定义路径
+			String p = properties.getProperty("pathname");
+
+			// 判定自定义路径是否为空
+			if (null == p || "".equals(p)) {
+				// 默认路径
+				pathname = System.getProperty("user.home") + System.getProperty("file.separator") + "log";
+			} else {
+				// 自定义路径
+				pathname = p;
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			logger.warning(Reggol.getStackTrace(e));
-
-			// 出错时使用默认路径
-			pathname = System.getProperty("user.home") + System.getProperty("file.separator") + "log";
 		}
 
 		// 日志输出路径
@@ -98,6 +106,9 @@ public class Reggol {
 						+ System.getProperty("line.separator");
 			}
 		});
+
+		// flush
+		fileHandler.flush();
 
 		// 添加FileHandler到Logger
 		logger.addHandler(fileHandler);

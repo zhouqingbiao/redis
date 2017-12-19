@@ -39,6 +39,7 @@ public class Redis {
 
 		// 定义JedisPool
 		JedisPool jedisPool = new JedisPool(poolConfig, host, port, timeout);
+		
 		logger.info("成功定义JedisPool");
 		logger.info("host" + "=" + host);
 		logger.info("port" + "=" + port);
