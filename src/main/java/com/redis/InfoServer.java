@@ -1,8 +1,7 @@
 package com.redis;
 
-import java.util.logging.Logger;
-
-import com.log.Reggol;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -10,7 +9,7 @@ import redis.clients.jedis.JedisPool;
 public class InfoServer {
 
 	// 获取Logger
-	static Logger logger = Reggol.getLogger();
+	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
 	public static void main(String[] args) {
 		logger.info(new InfoServer().getInfoServer());

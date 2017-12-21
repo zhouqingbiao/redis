@@ -1,17 +1,15 @@
 package com.redis;
 
-import java.util.logging.Logger;
-
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-
-import com.log.Reggol;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import redis.clients.jedis.JedisPool;
 
 public class Redis {
 
 	// 获得Logger
-	static Logger logger = Reggol.getLogger();
+	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
 	/**
 	 * 
@@ -39,7 +37,7 @@ public class Redis {
 
 		// 定义JedisPool
 		JedisPool jedisPool = new JedisPool(poolConfig, host, port, timeout);
-		
+
 		logger.info("成功定义JedisPool");
 		logger.info("host" + "=" + host);
 		logger.info("port" + "=" + port);

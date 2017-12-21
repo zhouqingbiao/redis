@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level[%C.%M:%L] - %m%n" />
+		</Console>
+		<RollingFile name="RollingFile"
+			fileName="C:/Users/Administrator/Desktop/java.log"
+			filePattern="C:/Users/Administrator/Desktop/$${date:yyyy-MM}/java-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout
+				pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level[%C.%M:%L] - %m%n" />
+			<SizeBasedTriggeringPolicy size="50 MB" />
+			<DefaultRolloverStrategy max="20" />
+		</RollingFile>
+	</Appenders>
+	<Loggers>
+		<Root level="info">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="RollingFile" />
+		</Root>
+	</Loggers>
+</Configuration>

@@ -7,14 +7,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
-import java.util.logging.Logger;
 
-import com.log.Reggol;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Oracle {
 
 	// 获得Logger
-	static Logger logger = Reggol.getLogger();
+	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
 	// 数据库连接次数，最大不超过4次。
 	int i = 1;
@@ -31,7 +31,7 @@ public class Oracle {
 			logger.info("Oracle数据库驱动注册成功");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
-			logger.warning(Reggol.getStackTrace(e));
+			logger.warn(e);
 		}
 
 		String url = null;
@@ -48,6 +48,7 @@ public class Oracle {
 			password = properties.getProperty("password");
 		} catch (IOException e) {
 			e.printStackTrace();
+			logger.warn(e);
 		}
 		// 获取数据库连接
 		Connection connection = null;
@@ -59,8 +60,8 @@ public class Oracle {
 			logger.info("password" + "=" + password);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			logger.warning(url + "连接失败！");
-			logger.warning(Reggol.getStackTrace(e));
+			logger.warn(url + "连接失败！");
+			logger.warn(e);
 
 			// 次数自增长
 			i++;
@@ -97,7 +98,7 @@ public class Oracle {
 			logger.info(sql);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			logger.warning(Reggol.getStackTrace(e));
+			logger.warn(e);
 		}
 		return preparedStatement;
 	}
@@ -116,7 +117,7 @@ public class Oracle {
 			resultSet = preparedStatement.executeQuery();
 		} catch (SQLException e) {
 			e.printStackTrace();
-			logger.warning(Reggol.getStackTrace(e));
+			logger.warn(e);
 		}
 		return resultSet;
 
@@ -137,7 +138,7 @@ public class Oracle {
 				logger.info("ResultSet已关闭！");
 			} catch (SQLException e) {
 				e.printStackTrace();
-				logger.warning(Reggol.getStackTrace(e));
+				logger.warn(e);
 			}
 		}
 
@@ -148,7 +149,7 @@ public class Oracle {
 				logger.info("PreparedStatement已关闭！");
 			} catch (SQLException e) {
 				e.printStackTrace();
-				logger.warning(Reggol.getStackTrace(e));
+				logger.warn(e);
 			}
 		}
 
@@ -159,7 +160,7 @@ public class Oracle {
 				logger.info("Connection已关闭！");
 			} catch (SQLException e) {
 				e.printStackTrace();
-				logger.warning(Reggol.getStackTrace(e));
+				logger.warn(e);
 			}
 		}
 

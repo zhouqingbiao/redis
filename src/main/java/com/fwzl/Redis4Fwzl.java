@@ -10,9 +10,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
-import com.log.Reggol;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.oracle.Oracle;
 import com.redis.Redis;
 
@@ -22,7 +23,7 @@ import redis.clients.jedis.JedisPool;
 public class Redis4Fwzl {
 
 	// 获得Logger
-	static Logger logger = Reggol.getLogger();
+	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
 	public ArrayList<Map<String, String>> getFwzl4Redis(String fwzl) {
 

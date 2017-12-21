@@ -4,19 +4,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 import javax.jws.WebService;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 
 import com.fwzl.Redis4Fwzl;
-import com.log.Reggol;
 
 @WebService
 public class Jws {
 	// 获得Logger
-	static Logger logger = Reggol.getLogger();
+	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
 	private boolean checkUserAndPassword(String user, String password) {
 
@@ -38,6 +38,7 @@ public class Jws {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+			logger.warn(e);
 		}
 		return false;
 	}

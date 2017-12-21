@@ -4,13 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Logger;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-import com.log.Reggol;
 import com.oracle.Oracle;
 import com.redis.Redis;
 
@@ -20,7 +20,7 @@ import redis.clients.jedis.JedisPool;
 public class SelectHzGisTpsFw implements Job {
 
 	// 获得Logger
-	static Logger logger = Reggol.getLogger();
+	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
 	public static void main(String[] args) {
 		new SelectHzGisTpsFw().addKey();
@@ -45,7 +45,7 @@ public class SelectHzGisTpsFw implements Job {
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.info("Redis定义失败！请检查Redis是否正常运行！");
-			logger.warning(Reggol.getStackTrace(e));
+			logger.warn(e);
 			return;
 		}
 
@@ -106,7 +106,7 @@ public class SelectHzGisTpsFw implements Job {
 				logger.info(String.valueOf(count));
 			} catch (SQLException e) {
 				e.printStackTrace();
-				logger.warning(Reggol.getStackTrace(e));
+				logger.warn(e);
 			} finally {
 				jracle.close(resultSet, preparedStatement, connection);
 			}
@@ -165,7 +165,7 @@ public class SelectHzGisTpsFw implements Job {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			logger.warning(Reggol.getStackTrace(e));
+			logger.warn(e);
 		} finally {
 			jracle.close(resultSet, preparedStatement, connection);
 		}
