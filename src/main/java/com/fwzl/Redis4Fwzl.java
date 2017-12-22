@@ -107,8 +107,6 @@ public class Redis4Fwzl {
 		logger.info("运行时间（Redis）：" + (stopTime4Redis - startTime4Redis) / 1000000000 + "秒");
 		logger.info("Redis条数：" + set.size());
 
-		// ----------------------------------------------------------------------------------------------------------
-
 		// Oracle开始时间
 		long startTime4Oracle = System.nanoTime();
 
@@ -125,23 +123,20 @@ public class Redis4Fwzl {
 		logger.info("运行时间（Oracle）：" + (stopTime4Oracle - startTime4Oracle) / 1000000 + "毫秒");
 		logger.info("运行时间（Oracle）：" + (stopTime4Oracle - startTime4Oracle) / 1000000000 + "秒");
 		logger.info("Oracle条数：" + arrayList.size());
-		logger.info(
-				"----------------------------------------------------------------------------------------------------------");
-
-		// ----------------------------------------------------------------------------------------------------------
+		logger.info("------------------------------------------------------------------------------------------------");
 
 		logger.info("Redis查询关键字：" + fwzl);
 		logger.info("Redis消耗时间：" + (stopTime4Redis - startTime4Redis) + "纳秒");
 		logger.info("Redis消耗时间：" + (stopTime4Redis - startTime4Redis) / 1000000 + "毫秒");
 		logger.info("Redis消耗时间：" + (stopTime4Redis - startTime4Redis) / 1000000000 + "秒");
-		logger.info(
-				"----------------------------------------------------------------------------------------------------------");
+		logger.info("------------------------------------------------------------------------------------------------");
+
 		logger.info("Oracle精确查询：" + idStringBuffer);
 		logger.info("Oracle消耗时间：" + (stopTime4Oracle - startTime4Oracle) + "纳秒");
 		logger.info("Oracle消耗时间：" + (stopTime4Oracle - startTime4Oracle) / 1000000 + "毫秒");
 		logger.info("Oracle消耗时间：" + (stopTime4Oracle - startTime4Oracle) / 1000000000 + "秒");
-		logger.info(
-				"----------------------------------------------------------------------------------------------------------");
+		logger.info("------------------------------------------------------------------------------------------------");
+
 		logger.info("总消耗时间：" + ((stopTime4Redis - startTime4Redis) + (stopTime4Oracle - startTime4Oracle)) + "纳秒");
 		logger.info("总消耗时间："
 				+ ((stopTime4Redis - startTime4Redis) / 1000000 + (stopTime4Oracle - startTime4Oracle) / 1000000)
