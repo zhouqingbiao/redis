@@ -162,8 +162,8 @@ public class Redis4Fwzl {
 		Iterator<String> iterator = list.iterator();
 		// 拼接sql
 		StringBuffer sql = new StringBuffer();
-		sql.append(
-				"select t.* from hz_gis.tps_fw t where t.lsbz = 0 and t.fwzl is not null and t.fwsmzq = 1201 and t.id in ");
+		String sql_str = "select t.id from hz_gis.tps_fw t where t.lsbz = 0 and t.fwzl is not null and t.fwsmzq = 1201 and t.id in ";
+		sql.append(sql_str);
 		try {
 			sql.append("(");
 			for (int i = 1; i <= list.size(); i++) {
@@ -205,8 +205,7 @@ public class Redis4Fwzl {
 					}
 					// 重置sql
 					sql.setLength(0);
-					sql.append(
-							"select t.* from hz_gis.tps_fw t where t.lsbz = 0 and t.fwzl is not null and t.fwsmzq = 1201 and t.id in ");
+					sql.append(sql_str);
 					sql.append("(");
 					// 重置i
 					i = 0;
