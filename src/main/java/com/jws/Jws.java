@@ -50,7 +50,7 @@ public class Jws {
 	 * @param fwzl
 	 * @return
 	 */
-	public String getFwzl(String user, String password, String fwzl) {
+	public String getFwzlWithCheck(String user, String password, String fwzl) {
 
 		JSONArray jSONArray = new JSONArray();
 
