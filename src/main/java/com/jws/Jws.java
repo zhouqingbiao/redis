@@ -43,6 +43,13 @@ public class Jws {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param user
+	 * @param password
+	 * @param fwzl
+	 * @return
+	 */
 	public String getFwzl(String user, String password, String fwzl) {
 
 		JSONArray jSONArray = new JSONArray();
@@ -54,6 +61,26 @@ public class Jws {
 		if (checkUserAndPassword(user, password) == false) {
 			return jSONArray.toString();
 		}
+
+		ArrayList<Map<String, String>> arrayList = new Redis4Fwzl().getFwzl4Redis(fwzl);
+
+		if (arrayList != null) {
+			for (int i = 0; i < arrayList.size(); i++) {
+				jSONArray.put(arrayList.get(i));
+			}
+		}
+
+		return jSONArray.toString();
+	}
+
+	/**
+	 * 
+	 * @param fwzl
+	 * @return
+	 */
+	public String getFwzl(String fwzl) {
+
+		JSONArray jSONArray = new JSONArray();
 
 		ArrayList<Map<String, String>> arrayList = new Redis4Fwzl().getFwzl4Redis(fwzl);
 
