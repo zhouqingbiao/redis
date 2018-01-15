@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -18,15 +20,18 @@ import com.redis.Redis;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-public class Redis4Fwzl {
+public class Redis4FwzlWithColumnName {
 
 	// 获得Logger
 	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
-	public String getFwzl4Redis(String fwzl) {
+	public ArrayList<Map<String, String>> getFwzl4Redis(String fwzl) {
 
 		// 过滤垃圾信息
 		// TODO
+
+		// Redis开始时间
+		long startTime4Redis = System.nanoTime();
 
 		// 获得JedisPool
 		JedisPool jedisPool = new Redis().getJedisPool();
@@ -91,13 +96,58 @@ public class Redis4Fwzl {
 		jedisPool.close();
 		logger.info("Redis已关闭！");
 
-		// 获得Oracle数据
-		// ArrayList<String> arrayList = this.getFwzl4Oracle(idList);
+		// Redis停止时间
+		long stopTime4Redis = System.nanoTime();
+		logger.info("开始时间（Redis）：" + startTime4Redis);
+		logger.info("停止时间（Redis）：" + stopTime4Redis);
 
-		return idStringBuffer.toString();
+		// Redis总时间消耗
+		logger.info("运行时间（Redis）：" + (stopTime4Redis - startTime4Redis) + "纳秒");
+		logger.info("运行时间（Redis）：" + (stopTime4Redis - startTime4Redis) / 1000000 + "毫秒");
+		logger.info("运行时间（Redis）：" + (stopTime4Redis - startTime4Redis) / 1000000000 + "秒");
+		logger.info("Redis条数：" + set.size());
+
+		// Oracle开始时间
+		long startTime4Oracle = System.nanoTime();
+
+		// 获得Oracle数据
+		ArrayList<Map<String, String>> arrayList = this.getFwzl4Oracle(idList);
+
+		// Oracle停止时间
+		long stopTime4Oracle = System.nanoTime();
+		logger.info("开始时间（Oracle）：" + startTime4Oracle);
+		logger.info("停止时间（Oracle）：" + stopTime4Oracle);
+
+		// Oracle总时间消耗
+		logger.info("运行时间（Oracle）：" + (stopTime4Oracle - startTime4Oracle) + "纳秒");
+		logger.info("运行时间（Oracle）：" + (stopTime4Oracle - startTime4Oracle) / 1000000 + "毫秒");
+		logger.info("运行时间（Oracle）：" + (stopTime4Oracle - startTime4Oracle) / 1000000000 + "秒");
+		logger.info("Oracle条数：" + arrayList.size());
+		logger.info("------------------------------------------------------------------------------------------------");
+
+		logger.info("Redis查询关键字：" + fwzl);
+		logger.info("Redis消耗时间：" + (stopTime4Redis - startTime4Redis) + "纳秒");
+		logger.info("Redis消耗时间：" + (stopTime4Redis - startTime4Redis) / 1000000 + "毫秒");
+		logger.info("Redis消耗时间：" + (stopTime4Redis - startTime4Redis) / 1000000000 + "秒");
+		logger.info("------------------------------------------------------------------------------------------------");
+
+		logger.info("Oracle精确查询：" + idStringBuffer);
+		logger.info("Oracle消耗时间：" + (stopTime4Oracle - startTime4Oracle) + "纳秒");
+		logger.info("Oracle消耗时间：" + (stopTime4Oracle - startTime4Oracle) / 1000000 + "毫秒");
+		logger.info("Oracle消耗时间：" + (stopTime4Oracle - startTime4Oracle) / 1000000000 + "秒");
+		logger.info("------------------------------------------------------------------------------------------------");
+
+		logger.info("总消耗时间：" + ((stopTime4Redis - startTime4Redis) + (stopTime4Oracle - startTime4Oracle)) + "纳秒");
+		logger.info("总消耗时间："
+				+ ((stopTime4Redis - startTime4Redis) / 1000000 + (stopTime4Oracle - startTime4Oracle) / 1000000)
+				+ "毫秒");
+		logger.info("总消耗时间："
+				+ ((stopTime4Redis - startTime4Redis) / 1000000000 + (stopTime4Oracle - startTime4Oracle) / 1000000000)
+				+ "秒");
+		return arrayList;
 	}
 
-	public ArrayList<String> getFwzl4Oracle(List<String> list) {
+	public ArrayList<Map<String, String>> getFwzl4Oracle(List<String> list) {
 
 		// 定义Oralce并获取连接
 		Oracle jracle = new Oracle();
@@ -105,8 +155,8 @@ public class Redis4Fwzl {
 		PreparedStatement preparedStatement = null;
 		ResultSet resultSet = null;
 
-		// 数据存入ArrayList
-		ArrayList<String> arrayList = new ArrayList<String>();
+		// 数据存入Map
+		ArrayList<Map<String, String>> arrayList = new ArrayList<Map<String, String>>();
 
 		// ListIterator化
 		Iterator<String> iterator = list.iterator();
@@ -140,13 +190,15 @@ public class Redis4Fwzl {
 
 					resultSet = jracle.getResultSet(preparedStatement);
 
+					Map<String, String> map;
 					try {
 						while (resultSet.next()) {
-
-							// 获取总列数并循环保存进ArrayList
+							map = new HashMap<String, String>();
+							// 获取总列数并循环保存进Map
 							for (int j = 1; j <= resultSet.getMetaData().getColumnCount(); j++) {
-								arrayList.add(resultSet.getString(j));
+								map.put(resultSet.getMetaData().getColumnName(j), resultSet.getString(j));
 							}
+							arrayList.add(map);
 						}
 					} catch (SQLException e) {
 						e.printStackTrace();

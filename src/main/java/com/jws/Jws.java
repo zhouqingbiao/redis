@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 
 import com.fwzl.Redis4Fwzl;
+import com.fwzl.Redis4FwzlWithColumnName;
 
 @WebService
 public class Jws {
@@ -62,7 +63,8 @@ public class Jws {
 			return jSONArray.toString();
 		}
 
-		ArrayList<Map<String, String>> arrayList = new Redis4Fwzl().getFwzl4Redis(fwzl);
+		// WithColumnName
+		ArrayList<Map<String, String>> arrayList = new Redis4FwzlWithColumnName().getFwzl4Redis(fwzl);
 
 		if (arrayList != null) {
 			for (int i = 0; i < arrayList.size(); i++) {
@@ -79,10 +81,21 @@ public class Jws {
 	 * @return
 	 */
 	public String getFwzl(String fwzl) {
+		// NoColumnName
+		return new Redis4Fwzl().getFwzl4Redis(fwzl);
+	}
+
+	/**
+	 * 
+	 * @param fwzl
+	 * @return
+	 */
+	public String getFwzlWithColumnName(String fwzl) {
 
 		JSONArray jSONArray = new JSONArray();
 
-		ArrayList<Map<String, String>> arrayList = new Redis4Fwzl().getFwzl4Redis(fwzl);
+		// WithColumnName
+		ArrayList<Map<String, String>> arrayList = new Redis4FwzlWithColumnName().getFwzl4Redis(fwzl);
 
 		if (arrayList != null) {
 			for (int i = 0; i < arrayList.size(); i++) {
