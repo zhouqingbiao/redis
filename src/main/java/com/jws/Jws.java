@@ -15,6 +15,7 @@ import com.data.Redis4HzFwdjTpfJcdjb;
 import com.data.Redis4HzGisTpsFw;
 import com.data.Redis4HzGisTpsFwWithColumnName;
 import com.data.SelectHzFwdjTpfJcdjb;
+import com.data.SelectHzGisTpsFw;
 
 @WebService
 public class Jws {
@@ -59,7 +60,7 @@ public class Jws {
 
 		// 校验密码
 		if (checkUserAndPassword(user, password) == true) {
-			// new SelectHzGisTpsFw().addKey();
+			new SelectHzGisTpsFw().addKey();
 			new SelectHzFwdjTpfJcdjb().addKey();
 		}
 	}
