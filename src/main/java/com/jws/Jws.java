@@ -13,6 +13,8 @@ import org.json.JSONArray;
 
 import com.fwzl.Redis4Fwzl;
 import com.fwzl.Redis4FwzlWithColumnName;
+import com.fwzl.Redis4HzFwdjTpfJcdjb;
+import com.fwzl.SelectHzFwdjTpfJcdjb;
 
 @WebService
 public class Jws {
@@ -42,6 +44,35 @@ public class Jws {
 			logger.warn(e);
 		}
 		return false;
+	}
+
+	public void manualExtractData(String password) {
+
+		String user = "zhouqingbiao";
+		logger.info("user:" + user);
+		logger.info("password:" + password);
+
+		// 校验密码
+		if (checkUserAndPassword(user, password) == true) {
+			// new SelectHzGisTpsFw().addKey();
+			new SelectHzFwdjTpfJcdjb().addKey();
+		}
+	}
+
+	public String selectHzFwdjTpfJcdjb(String fwzl) {
+
+		JSONArray jSONArray = new JSONArray();
+
+		// WithColumnName
+		ArrayList<Map<String, String>> arrayList = new Redis4HzFwdjTpfJcdjb().getData(fwzl);
+
+		if (arrayList != null) {
+			for (int i = 0; i < arrayList.size(); i++) {
+				jSONArray.put(arrayList.get(i));
+			}
+		}
+
+		return jSONArray.toString();
 	}
 
 	/**
