@@ -1,14 +1,12 @@
-package com.fwzl;
+package com.data;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -20,12 +18,12 @@ import com.redis.Redis;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-public class Redis4HzFwdjTpfJcdjb {
+public class Redis4HzGisTpsFw {
 
 	// 获得Logger
 	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
-	public ArrayList<Map<String, String>> getData(String fwzl) {
+	public String getData(String keys) {
 
 		// 过滤垃圾信息
 		// TODO
@@ -42,40 +40,51 @@ public class Redis4HzFwdjTpfJcdjb {
 		}
 
 		// 选择数据库
-		int index = 1;
+		int index = 0;
 		jedis.select(index);
 		logger.info("选择" + index + "号Redis数据库");
 
 		// 查询数据库
-		Set<String> set = jedis.keys(fwzl);
+		Set<String> set = jedis.keys(keys);
 
 		if (set.isEmpty()) {
 			logger.info("查询结果为空！");
 			return null;
 		}
 
-		// 定义List
-		ArrayList<Map<String, String>> fqList = new ArrayList<Map<String, String>>();
+		StringBuffer keyStringBuffer = new StringBuffer();
+		StringBuffer valueStringBuffer = new StringBuffer();
 
-		Map<String, String> fq = null;
+		// 定义idList
+		List<String> resultList = new ArrayList<String>();
 
+		// 组装StringBuffer
 		for (String fwzlString : set) {
+			// 组装keyStringBuffer
+			keyStringBuffer.append(fwzlString);
 
 			// 获取RedisList
 			List<String> list = jedis.lrange(fwzlString, 0, jedis.llen(fwzlString));
 
-			// 组装idStringBuffer
-			for (String idString : list) {
-				// put Map
-//				System.out.println(fwzlString + ":" + idString);
-				
-				fq = new HashMap<String, String>();
-				
-				fq.put(fwzlString, idString);
+			// 组装valueStringBuffer
+			for (String resultString : list) {
 
-				fqList.add(fq);
+				// add resultString to resultList
+				resultList.add(resultString);
+
+				valueStringBuffer.append(resultString);
+				valueStringBuffer.append(",");
 			}
+			keyStringBuffer.append(",");
 		}
+
+		// 删除最后字符
+		valueStringBuffer.deleteCharAt(valueStringBuffer.length() - 1);
+		keyStringBuffer.deleteCharAt(keyStringBuffer.length() - 1);
+
+		// 输出StringBuffer
+		logger.info("KEYS：" + keyStringBuffer);
+		logger.info("VALUES：" + valueStringBuffer);
 
 		// 关闭Redis
 		jedis.close();
@@ -83,9 +92,9 @@ public class Redis4HzFwdjTpfJcdjb {
 		logger.info("Redis已关闭！");
 
 		// 获得Oracle数据
-		// ArrayList<String> arrayList = this.getFwzl4Oracle(idList);
+		// this.getFwzl4Oracle(resultList);
 
-		return fqList;
+		return valueStringBuffer.toString();
 	}
 
 	public ArrayList<String> getFwzl4Oracle(List<String> list) {
@@ -103,7 +112,7 @@ public class Redis4HzFwdjTpfJcdjb {
 		Iterator<String> iterator = list.iterator();
 		// 拼接sql
 		StringBuffer sql = new StringBuffer();
-		String sql_str = "select t.id from hz_gis.tps_fw t where t.lsbz = 0 and t.fwzl is not null and t.fwsmzq = 1201 and t.id in ";
+		String sql_str = "SELECT * FROM HZ_GIS.TPS_FW T WHERE T.LSBZ = 0 AND T.FWZL IS NOT NULL AND T.FWSMZQ = 1201 AND T.ID IN ";
 		sql.append(sql_str);
 		try {
 			sql.append("(");

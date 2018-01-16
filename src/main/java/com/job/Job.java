@@ -9,7 +9,7 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
-import com.fwzl.SelectHzGisTpsFw;
+import com.data.SelectHzGisTpsFw;
 
 public class Job {
 	/**

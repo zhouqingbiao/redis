@@ -1,4 +1,4 @@
-package com.fwzl;
+package com.data;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,17 +22,17 @@ public class SelectHzGisTpsFw implements Job {
 	// 获得Logger
 	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
-	public static void main(String[] args) {
-		new SelectHzGisTpsFw().addKey();
-	}
-
 	/**
 	 * Oracle中房屋坐落DistinctCount值作为Redis的key
 	 */
 	public void addKey() {
 
+		// 开始时间
+		long startTime = System.nanoTime();
+		logger.info("开始时间：" + startTime);
+
 		// 获取distinct_count_fwzl总数
-		String sql = "select count(distinct(t.fwzl)) distinct_count from hz_gis.tps_fw t where t.lsbz = 0 and t.fwzl is not null and t.fwsmzq = 1201";
+		String sql = "SELECT COUNT(DISTINCT(T.FWZL)) DISTINCT_COUNT FROM HZ_GIS.TPS_FW T WHERE T.LSBZ = 0 AND T.FWZL IS NOT NULL AND T.FWSMZQ = 1201";
 
 		int distinctCount = this.getDistinctCount(sql);
 
@@ -63,10 +63,6 @@ public class SelectHzGisTpsFw implements Job {
 		long dbSize = jedis.dbSize();
 		logger.info("Redis" + ":" + dbSize);
 
-		// 开始时间
-		long startTime = System.nanoTime();
-		logger.info("开始时间：" + startTime);
-
 		// Redis不存在则去35库查询--执行模块
 		if (distinctCount != dbSize) {
 
@@ -78,7 +74,7 @@ public class SelectHzGisTpsFw implements Job {
 			Connection connection = jracle.getConnection();
 
 			// Redis不存在则去35库查询--查询语句
-			sql = "select t.id, t.fwzl from hz_gis.tps_fw t where t.lsbz = 0 and t.fwzl is not null and t.fwsmzq = 1201";
+			sql = "SELECT T.ID, T.FWCODE, T.FWZL FROM HZ_GIS.TPS_FW T WHERE T.LSBZ = 0 AND T.FWZL IS NOT NULL AND T.FWSMZQ = 1201";
 
 			// 不存在才执行sql
 			PreparedStatement preparedStatement = jracle.getPreparedStatement(connection, sql);
@@ -95,7 +91,7 @@ public class SelectHzGisTpsFw implements Job {
 				while (resultSet.next()) {
 
 					// 加入RedisList
-					jedis.lpush(resultSet.getString("FWZL"), resultSet.getString("ID"));
+					jedis.lpush(resultSet.getString("FWZL"), resultSet.getString("FWCODE"));
 
 					// 数据量自增长
 					count++;

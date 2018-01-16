@@ -1,4 +1,4 @@
-package com.fwzl;
+package com.data;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

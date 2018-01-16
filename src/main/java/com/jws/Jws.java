@@ -11,10 +11,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 
-import com.fwzl.Redis4Fwzl;
-import com.fwzl.Redis4FwzlWithColumnName;
-import com.fwzl.Redis4HzFwdjTpfJcdjb;
-import com.fwzl.SelectHzFwdjTpfJcdjb;
+import com.data.Redis4HzFwdjTpfJcdjb;
+import com.data.Redis4HzGisTpsFw;
+import com.data.Redis4HzGisTpsFwWithColumnName;
+import com.data.SelectHzFwdjTpfJcdjb;
 
 @WebService
 public class Jws {
@@ -46,6 +46,11 @@ public class Jws {
 		return false;
 	}
 
+	/**
+	 * 手动提取数据
+	 * 
+	 * @param password
+	 */
 	public void manualExtractData(String password) {
 
 		String user = "zhouqingbiao";
@@ -59,12 +64,43 @@ public class Jws {
 		}
 	}
 
-	public String selectHzFwdjTpfJcdjb(String fwzl) {
+	public String selectHzFwdjTpfJcdjb(String keys) {
 
 		JSONArray jSONArray = new JSONArray();
 
 		// WithColumnName
-		ArrayList<Map<String, String>> arrayList = new Redis4HzFwdjTpfJcdjb().getData(fwzl);
+		ArrayList<Map<String, String>> arrayList = new Redis4HzFwdjTpfJcdjb().getData(keys);
+
+		if (arrayList != null) {
+			for (int i = 0; i < arrayList.size(); i++) {
+				jSONArray.put(arrayList.get(i));
+			}
+		}
+
+		return jSONArray.toString();
+	}
+
+	/**
+	 * 
+	 * @param fwzl
+	 * @return
+	 */
+	public String selectHzGisTpsFw(String keys) {
+		// NoColumnName
+		return new Redis4HzGisTpsFw().getData(keys);
+	}
+
+	/**
+	 * 
+	 * @param fwzl
+	 * @return
+	 */
+	public String selectHzGisTpsFwWithColumnName(String keys) {
+
+		JSONArray jSONArray = new JSONArray();
+
+		// WithColumnName
+		ArrayList<Map<String, String>> arrayList = new Redis4HzGisTpsFwWithColumnName().getData(keys);
 
 		if (arrayList != null) {
 			for (int i = 0; i < arrayList.size(); i++) {
@@ -82,7 +118,7 @@ public class Jws {
 	 * @param fwzl
 	 * @return
 	 */
-	public String getFwzlWithCheck(String user, String password, String fwzl) {
+	public String selectHzGisTpsFwWithCheck(String user, String password, String keys) {
 
 		JSONArray jSONArray = new JSONArray();
 
@@ -95,38 +131,7 @@ public class Jws {
 		}
 
 		// WithColumnName
-		ArrayList<Map<String, String>> arrayList = new Redis4FwzlWithColumnName().getFwzl4Redis(fwzl);
-
-		if (arrayList != null) {
-			for (int i = 0; i < arrayList.size(); i++) {
-				jSONArray.put(arrayList.get(i));
-			}
-		}
-
-		return jSONArray.toString();
-	}
-
-	/**
-	 * 
-	 * @param fwzl
-	 * @return
-	 */
-	public String getFwzl(String fwzl) {
-		// NoColumnName
-		return new Redis4Fwzl().getFwzl4Redis(fwzl);
-	}
-
-	/**
-	 * 
-	 * @param fwzl
-	 * @return
-	 */
-	public String getFwzlWithColumnName(String fwzl) {
-
-		JSONArray jSONArray = new JSONArray();
-
-		// WithColumnName
-		ArrayList<Map<String, String>> arrayList = new Redis4FwzlWithColumnName().getFwzl4Redis(fwzl);
+		ArrayList<Map<String, String>> arrayList = new Redis4HzGisTpsFwWithColumnName().getData(keys);
 
 		if (arrayList != null) {
 			for (int i = 0; i < arrayList.size(); i++) {

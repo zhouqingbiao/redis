@@ -1,4 +1,4 @@
-package com.fwzl;
+package com.data;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,12 +20,12 @@ import com.redis.Redis;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-public class Redis4FwzlWithColumnName {
+public class Redis4HzGisTpsFwWithColumnName {
 
 	// 获得Logger
 	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
-	public ArrayList<Map<String, String>> getFwzl4Redis(String fwzl) {
+	public ArrayList<Map<String, String>> getData(String keys) {
 
 		// 过滤垃圾信息
 		// TODO
@@ -50,46 +50,46 @@ public class Redis4FwzlWithColumnName {
 		logger.info("选择" + index + "号Redis数据库");
 
 		// 查询数据库
-		Set<String> set = jedis.keys(fwzl);
+		Set<String> set = jedis.keys(keys);
 
 		if (set.isEmpty()) {
 			logger.info("查询结果为空！");
 			return null;
 		}
 
-		StringBuffer fwzlStringBuffer = new StringBuffer();
-		StringBuffer idStringBuffer = new StringBuffer();
+		StringBuffer keyStringBuffer = new StringBuffer();
+		StringBuffer valueStringBuffer = new StringBuffer();
 
 		// 定义idList
-		List<String> idList = new ArrayList<String>();
+		List<String> resultList = new ArrayList<String>();
 
 		// 组装StringBuffer
-		for (String fwzlString : set) {
+		for (String keyString : set) {
 			// 组装fwzlStringBuffer
-			fwzlStringBuffer.append(fwzlString);
+			keyStringBuffer.append(keyString);
 
 			// 获取RedisList
-			List<String> list = jedis.lrange(fwzlString, 0, jedis.llen(fwzlString));
+			List<String> list = jedis.lrange(keyString, 0, jedis.llen(keyString));
 
 			// 组装idStringBuffer
-			for (String idString : list) {
+			for (String valueString : list) {
 
 				// add idString to idList
-				idList.add(idString);
+				resultList.add(valueString);
 
-				idStringBuffer.append(idString);
-				idStringBuffer.append(",");
+				valueStringBuffer.append(valueString);
+				valueStringBuffer.append(",");
 			}
-			fwzlStringBuffer.append(",");
+			keyStringBuffer.append(",");
 		}
 
 		// 删除最后字符
-		idStringBuffer.deleteCharAt(idStringBuffer.length() - 1);
-		fwzlStringBuffer.deleteCharAt(fwzlStringBuffer.length() - 1);
+		valueStringBuffer.deleteCharAt(valueStringBuffer.length() - 1);
+		keyStringBuffer.deleteCharAt(keyStringBuffer.length() - 1);
 
 		// 输出StringBuffer
-		logger.info("ID：" + idStringBuffer);
-		logger.info("FWZL：" + fwzlStringBuffer);
+		logger.info("KEYS：" + keyStringBuffer);
+		logger.info("VALUES：" + valueStringBuffer);
 
 		// 关闭Redis
 		jedis.close();
@@ -98,6 +98,31 @@ public class Redis4FwzlWithColumnName {
 
 		// Redis停止时间
 		long stopTime4Redis = System.nanoTime();
+
+		// Redis.size
+		long size4Redis = jedis.dbSize();
+
+		// Oracle开始时间
+		long startTime4Oracle = System.nanoTime();
+
+		// 获得Oracle数据
+		ArrayList<Map<String, String>> arrayList = this.getFwzl4Oracle(resultList);
+
+		// Oracle.size
+		long size4Oracle = arrayList.size();
+
+		// Oracle停止时间
+		long stopTime4Oracle = System.nanoTime();
+
+		timeConsumption(startTime4Redis, stopTime4Redis, size4Redis, startTime4Oracle, stopTime4Oracle, size4Oracle);
+
+		return arrayList;
+	}
+
+	public void timeConsumption(long startTime4Redis, long stopTime4Redis, long size4Redis, long startTime4Oracle,
+			long stopTime4Oracle, long size4Oracle) {
+
+		// Redis开始结束时间
 		logger.info("开始时间（Redis）：" + startTime4Redis);
 		logger.info("停止时间（Redis）：" + stopTime4Redis);
 
@@ -105,16 +130,10 @@ public class Redis4FwzlWithColumnName {
 		logger.info("运行时间（Redis）：" + (stopTime4Redis - startTime4Redis) + "纳秒");
 		logger.info("运行时间（Redis）：" + (stopTime4Redis - startTime4Redis) / 1000000 + "毫秒");
 		logger.info("运行时间（Redis）：" + (stopTime4Redis - startTime4Redis) / 1000000000 + "秒");
-		logger.info("Redis条数：" + set.size());
 
-		// Oracle开始时间
-		long startTime4Oracle = System.nanoTime();
+		logger.info("Redis条数：" + size4Redis);
 
-		// 获得Oracle数据
-		ArrayList<Map<String, String>> arrayList = this.getFwzl4Oracle(idList);
-
-		// Oracle停止时间
-		long stopTime4Oracle = System.nanoTime();
+		// Redis开始结束时间
 		logger.info("开始时间（Oracle）：" + startTime4Oracle);
 		logger.info("停止时间（Oracle）：" + stopTime4Oracle);
 
@@ -122,21 +141,10 @@ public class Redis4FwzlWithColumnName {
 		logger.info("运行时间（Oracle）：" + (stopTime4Oracle - startTime4Oracle) + "纳秒");
 		logger.info("运行时间（Oracle）：" + (stopTime4Oracle - startTime4Oracle) / 1000000 + "毫秒");
 		logger.info("运行时间（Oracle）：" + (stopTime4Oracle - startTime4Oracle) / 1000000000 + "秒");
-		logger.info("Oracle条数：" + arrayList.size());
-		logger.info("------------------------------------------------------------------------------------------------");
 
-		logger.info("Redis查询关键字：" + fwzl);
-		logger.info("Redis消耗时间：" + (stopTime4Redis - startTime4Redis) + "纳秒");
-		logger.info("Redis消耗时间：" + (stopTime4Redis - startTime4Redis) / 1000000 + "毫秒");
-		logger.info("Redis消耗时间：" + (stopTime4Redis - startTime4Redis) / 1000000000 + "秒");
-		logger.info("------------------------------------------------------------------------------------------------");
+		logger.info("Oracle条数：" + size4Oracle);
 
-		logger.info("Oracle精确查询：" + idStringBuffer);
-		logger.info("Oracle消耗时间：" + (stopTime4Oracle - startTime4Oracle) + "纳秒");
-		logger.info("Oracle消耗时间：" + (stopTime4Oracle - startTime4Oracle) / 1000000 + "毫秒");
-		logger.info("Oracle消耗时间：" + (stopTime4Oracle - startTime4Oracle) / 1000000000 + "秒");
 		logger.info("------------------------------------------------------------------------------------------------");
-
 		logger.info("总消耗时间：" + ((stopTime4Redis - startTime4Redis) + (stopTime4Oracle - startTime4Oracle)) + "纳秒");
 		logger.info("总消耗时间："
 				+ ((stopTime4Redis - startTime4Redis) / 1000000 + (stopTime4Oracle - startTime4Oracle) / 1000000)
@@ -144,7 +152,6 @@ public class Redis4FwzlWithColumnName {
 		logger.info("总消耗时间："
 				+ ((stopTime4Redis - startTime4Redis) / 1000000000 + (stopTime4Oracle - startTime4Oracle) / 1000000000)
 				+ "秒");
-		return arrayList;
 	}
 
 	public ArrayList<Map<String, String>> getFwzl4Oracle(List<String> list) {
@@ -162,7 +169,7 @@ public class Redis4FwzlWithColumnName {
 		Iterator<String> iterator = list.iterator();
 		// 拼接sql
 		StringBuffer sql = new StringBuffer();
-		String sql_str = "select t.id from hz_gis.tps_fw t where t.lsbz = 0 and t.fwzl is not null and t.fwsmzq = 1201 and t.id in ";
+		String sql_str = "SELECT * FROM HZ_GIS.TPS_FW T WHERE T.LSBZ = 0 AND T.FWZL IS NOT NULL AND T.FWSMZQ = 1201 AND T.ID IN ";
 		sql.append(sql_str);
 		try {
 			sql.append("(");
