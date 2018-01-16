@@ -26,7 +26,10 @@ public class Job {
 		}
 
 		// define the jobDetail and tie it to our SelectHzGisTpsFw class
-		JobDetail jobDetail = JobBuilder.newJob(SelectHzGisTpsFw.class).withIdentity("jobDetail", "group").build();
+		JobDetail jobDetailSelectHzGisTpsFw = JobBuilder.newJob(SelectHzGisTpsFw.class)
+				.withIdentity("jobDetail", "group").build();
+		JobDetail jobDetailSelectHzFwdjTpfJcdjb = JobBuilder.newJob(SelectHzGisTpsFw.class)
+				.withIdentity("jobDetail", "group").build();
 
 		// Trigger the job to run now, and then repeat every 6 hours
 		Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger", "group").startNow()
@@ -34,7 +37,8 @@ public class Job {
 
 		// Tell quartz to schedule the jobDetail using our trigger
 		try {
-			scheduler.scheduleJob(jobDetail, trigger);
+			scheduler.scheduleJob(jobDetailSelectHzGisTpsFw, trigger);
+			scheduler.scheduleJob(jobDetailSelectHzFwdjTpfJcdjb, trigger);
 		} catch (SchedulerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

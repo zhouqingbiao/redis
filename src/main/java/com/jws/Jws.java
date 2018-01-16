@@ -83,7 +83,7 @@ public class Jws {
 
 	/**
 	 * 
-	 * @param fwzl
+	 * @param keys
 	 * @return
 	 */
 	public String selectHzGisTpsFw(String keys) {
@@ -93,7 +93,7 @@ public class Jws {
 
 	/**
 	 * 
-	 * @param fwzl
+	 * @param keys
 	 * @return
 	 */
 	public String selectHzGisTpsFwWithColumnName(String keys) {
@@ -116,7 +116,7 @@ public class Jws {
 	 * 
 	 * @param user
 	 * @param password
-	 * @param fwzl
+	 * @param keys
 	 * @return
 	 */
 	public String selectHzGisTpsFwWithCheck(String user, String password, String keys) {
