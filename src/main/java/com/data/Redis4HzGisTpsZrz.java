@@ -1,30 +1,25 @@
-package com.redis;
+package com.data;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.alibaba.fastjson.JSON;
+import com.redis.Redis;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-public class DelKeys {
+public class Redis4HzGisTpsZrz {
 
-	// 获取Logger
+	// 获得Logger
 	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
-	public static void main(String[] args) {
+	public ArrayList<Object> getData(String keys) {
 
-		// 删除keys
-		new DelKeys().delKeys("*");
-	}
-
-	/**
-	 * 逐条删除key
-	 * 
-	 * @param keys
-	 */
-	public void delKeys(String keys) {
+		// 过滤垃圾信息
 
 		// 获得JedisPool
 		JedisPool jedisPool = new Redis().getJedisPool();
@@ -38,25 +33,33 @@ public class DelKeys {
 		}
 
 		// 选择数据库
-		int index = 0;
+		int index = 2;
 		jedis.select(index);
 		logger.info("选择" + index + "号Redis数据库");
 
-		// 获取keys
+		// 查询数据库
 		Set<String> set = jedis.keys(keys);
 
-		// 遍历删除keys
-		for (String string : set) {
-			jedis.del(string);
+		if (set.isEmpty()) {
+			logger.info("查询结果为空！");
+			return null;
+		}
+		// 定义List
+		ArrayList<Object> resultList = new ArrayList<Object>();
+
+		for (String key : set) {
+
+			// 获取RedisList
+			for (String result : jedis.lrange(key, 0, jedis.llen(key) - 1)) {
+				resultList.add(JSON.parse(result));
+			}
 		}
 
-		// 输出当前数据库keys数量
-		logger.info("当前数据库keys数量：" + jedis.dbSize());
-
-		// 关闭
+		// 关闭Redis
 		jedis.close();
 		jedisPool.close();
 		logger.info("Redis已关闭！");
 
+		return resultList;
 	}
 }

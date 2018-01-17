@@ -1,14 +1,12 @@
 package com.data;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.alibaba.fastjson.JSON;
 import com.redis.Redis;
 
 import redis.clients.jedis.Jedis;
@@ -19,10 +17,9 @@ public class Redis4HzFwdjTpfJcdjb {
 	// 获得Logger
 	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
-	public ArrayList<Map<String, String>> getData(String keys) {
+	public ArrayList<Object> getData(String keys) {
 
 		// 过滤垃圾信息
-		// TODO
 
 		// 获得JedisPool
 		JedisPool jedisPool = new Redis().getJedisPool();
@@ -49,23 +46,13 @@ public class Redis4HzFwdjTpfJcdjb {
 		}
 
 		// 定义List
-		ArrayList<Map<String, String>> fqList = new ArrayList<Map<String, String>>();
+		ArrayList<Object> resultList = new ArrayList<Object>();
 
-		Map<String, String> fq = null;
-
-		for (String fwzlString : set) {
+		for (String key : set) {
 
 			// 获取RedisList
-			List<String> list = jedis.lrange(fwzlString, 0, jedis.llen(fwzlString));
-
-			for (String idString : list) {
-				// 组装Map
-				fq = new HashMap<String, String>();
-
-				fq.put(fwzlString, idString);
-
-				// 组装List
-				fqList.add(fq);
+			for (String result : jedis.lrange(key, 0, jedis.llen(key) - 1)) {
+				resultList.add(JSON.parse(result));
 			}
 		}
 
@@ -74,6 +61,6 @@ public class Redis4HzFwdjTpfJcdjb {
 		jedisPool.close();
 		logger.info("Redis已关闭！");
 
-		return fqList;
+		return resultList;
 	}
 }

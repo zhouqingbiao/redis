@@ -1,5 +1,7 @@
 package com.job;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -9,9 +11,11 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
-import com.data.SelectHzGisTpsFw;
-
 public class Job {
+
+	// 获得Logger
+	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
+
 	/**
 	 * 定时任务
 	 */
@@ -21,35 +25,31 @@ public class Job {
 		try {
 			scheduler = StdSchedulerFactory.getDefaultScheduler();
 		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.warn(e);
 		}
 
-		// define the jobDetail and tie it to our SelectHzGisTpsFw class
-		JobDetail jobDetailSelectHzGisTpsFw = JobBuilder.newJob(SelectHzGisTpsFw.class)
-				.withIdentity("jobDetail", "group").build();
-		JobDetail jobDetailSelectHzFwdjTpfJcdjb = JobBuilder.newJob(SelectHzGisTpsFw.class)
-				.withIdentity("jobDetail", "group").build();
+		// 建立JobDetail
+		JobDetail job = JobBuilder.newJob(Detail.class).withIdentity("job", "group").build();
 
-		// Trigger the job to run now, and then repeat every 6 hours
+		// 建立Trigger
 		Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger", "group").startNow()
 				.withSchedule(CronScheduleBuilder.cronSchedule("0 0 0/6 * * ?")).build();
 
-		// Tell quartz to schedule the jobDetail using our trigger
+		// Tell quartz to schedule the job using our trigger
 		try {
-			scheduler.scheduleJob(jobDetailSelectHzGisTpsFw, trigger);
-			scheduler.scheduleJob(jobDetailSelectHzFwdjTpfJcdjb, trigger);
+			scheduler.scheduleJob(job, trigger);
 		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.warn(e);
 		}
 
 		// and start it off
 		try {
 			scheduler.start();
 		} catch (SchedulerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			logger.warn(e);
 		}
 	}
 }

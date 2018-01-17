@@ -28,7 +28,6 @@ public class Redis4HzGisTpsFwWithColumnName {
 	public ArrayList<Map<String, String>> getData(String keys) {
 
 		// 过滤垃圾信息
-		// TODO
 
 		// Redis开始时间
 		long startTime4Redis = System.nanoTime();
@@ -57,39 +56,39 @@ public class Redis4HzGisTpsFwWithColumnName {
 			return null;
 		}
 
-		StringBuffer keyStringBuffer = new StringBuffer();
-		StringBuffer valueStringBuffer = new StringBuffer();
+		StringBuffer keysStringBuffer = new StringBuffer();
+		StringBuffer valuesStringBuffer = new StringBuffer();
 
 		// 定义idList
 		List<String> resultList = new ArrayList<String>();
 
 		// 组装StringBuffer
-		for (String keyString : set) {
+		for (String s : set) {
 			// 组装fwzlStringBuffer
-			keyStringBuffer.append(keyString);
+			keysStringBuffer.append(s);
 
 			// 获取RedisList
-			List<String> list = jedis.lrange(keyString, 0, jedis.llen(keyString));
+			List<String> list = jedis.lrange(s, 0, jedis.llen(s) - 1);
 
 			// 组装idStringBuffer
-			for (String valueString : list) {
+			for (String valuesString : list) {
 
 				// add idString to idList
-				resultList.add(valueString);
+				resultList.add(valuesString);
 
-				valueStringBuffer.append(valueString);
-				valueStringBuffer.append(",");
+				valuesStringBuffer.append(valuesString);
+				valuesStringBuffer.append(",");
 			}
-			keyStringBuffer.append(",");
+			keysStringBuffer.append(",");
 		}
 
 		// 删除最后字符
-		valueStringBuffer.deleteCharAt(valueStringBuffer.length() - 1);
-		keyStringBuffer.deleteCharAt(keyStringBuffer.length() - 1);
+		valuesStringBuffer.deleteCharAt(valuesStringBuffer.length() - 1);
+		keysStringBuffer.deleteCharAt(keysStringBuffer.length() - 1);
 
 		// 输出StringBuffer
-		logger.info("KEYS：" + keyStringBuffer);
-		logger.info("VALUES：" + valueStringBuffer);
+		logger.info("KEYS：" + keysStringBuffer);
+		logger.info("VALUES：" + valuesStringBuffer);
 
 		// 关闭Redis
 		jedis.close();
@@ -144,7 +143,6 @@ public class Redis4HzGisTpsFwWithColumnName {
 
 		logger.info("Oracle条数：" + size4Oracle);
 
-		logger.info("------------------------------------------------------------------------------------------------");
 		logger.info("总消耗时间：" + ((stopTime4Redis - startTime4Redis) + (stopTime4Oracle - startTime4Oracle)) + "纳秒");
 		logger.info("总消耗时间："
 				+ ((stopTime4Redis - startTime4Redis) / 1000000 + (stopTime4Oracle - startTime4Oracle) / 1000000)
@@ -169,7 +167,7 @@ public class Redis4HzGisTpsFwWithColumnName {
 		Iterator<String> iterator = list.iterator();
 		// 拼接sql
 		StringBuffer sql = new StringBuffer();
-		String sql_str = "SELECT * FROM HZ_GIS.TPS_FW T WHERE T.LSBZ = 0 AND T.FWZL IS NOT NULL AND T.FWSMZQ = 1201 AND T.ID IN ";
+		String sql_str = "SELECT * FROM HZ_GIS.TPS_FW T WHERE T.LSBZ = 0 AND T.FWZL IS NOT NULL AND T.FWSMZQ = 1201 AND T.FWCODE IN ";
 		sql.append(sql_str);
 		try {
 			sql.append("(");

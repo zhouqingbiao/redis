@@ -7,6 +7,12 @@ import org.apache.logging.log4j.Logger;
 
 import com.job.Job;
 
+/**
+ * 定时任务启动并发布WebService
+ * 
+ * @author QB.Zhou
+ *
+ */
 public class Publish {
 
 	// 获得Logger

@@ -26,7 +26,6 @@ public class Redis4HzGisTpsFw {
 	public String getData(String keys) {
 
 		// 过滤垃圾信息
-		// TODO
 
 		// 获得JedisPool
 		JedisPool jedisPool = new Redis().getJedisPool();
@@ -52,19 +51,19 @@ public class Redis4HzGisTpsFw {
 			return null;
 		}
 
-		StringBuffer keyStringBuffer = new StringBuffer();
-		StringBuffer valueStringBuffer = new StringBuffer();
+		StringBuffer keysStringBuffer = new StringBuffer();
+		StringBuffer valuesStringBuffer = new StringBuffer();
 
-		// 定义idList
+		// 定义resultList
 		List<String> resultList = new ArrayList<String>();
 
 		// 组装StringBuffer
-		for (String fwzlString : set) {
+		for (String s : set) {
 			// 组装keyStringBuffer
-			keyStringBuffer.append(fwzlString);
+			keysStringBuffer.append(s);
 
 			// 获取RedisList
-			List<String> list = jedis.lrange(fwzlString, 0, jedis.llen(fwzlString));
+			List<String> list = jedis.lrange(s, 0, jedis.llen(s));
 
 			// 组装valueStringBuffer
 			for (String resultString : list) {
@@ -72,19 +71,19 @@ public class Redis4HzGisTpsFw {
 				// add resultString to resultList
 				resultList.add(resultString);
 
-				valueStringBuffer.append(resultString);
-				valueStringBuffer.append(",");
+				valuesStringBuffer.append(resultString);
+				valuesStringBuffer.append(",");
 			}
-			keyStringBuffer.append(",");
+			keysStringBuffer.append(",");
 		}
 
 		// 删除最后字符
-		valueStringBuffer.deleteCharAt(valueStringBuffer.length() - 1);
-		keyStringBuffer.deleteCharAt(keyStringBuffer.length() - 1);
+		valuesStringBuffer.deleteCharAt(valuesStringBuffer.length() - 1);
+		keysStringBuffer.deleteCharAt(keysStringBuffer.length() - 1);
 
 		// 输出StringBuffer
-		logger.info("KEYS：" + keyStringBuffer);
-		logger.info("VALUES：" + valueStringBuffer);
+		logger.info("KEYS：" + keysStringBuffer);
+		logger.info("VALUES：" + valuesStringBuffer);
 
 		// 关闭Redis
 		jedis.close();
@@ -94,7 +93,7 @@ public class Redis4HzGisTpsFw {
 		// 获得Oracle数据
 		// this.getFwzl4Oracle(resultList);
 
-		return valueStringBuffer.toString();
+		return valuesStringBuffer.toString();
 	}
 
 	public ArrayList<String> getFwzl4Oracle(List<String> list) {

@@ -12,8 +12,9 @@ public class Redis {
 	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
 	/**
+	 * 返回JedisPool连接池
 	 * 
-	 * @return JedisPool
+	 * @return
 	 */
 	public JedisPool getJedisPool() {
 

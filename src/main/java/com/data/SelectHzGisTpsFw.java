@@ -7,9 +7,6 @@ import java.sql.SQLException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 
 import com.oracle.Oracle;
 import com.redis.Redis;
@@ -17,7 +14,7 @@ import com.redis.Redis;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-public class SelectHzGisTpsFw implements Job {
+public class SelectHzGisTpsFw {
 
 	// 获得Logger
 	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
@@ -29,7 +26,6 @@ public class SelectHzGisTpsFw implements Job {
 
 		// 开始时间
 		long startTime = System.nanoTime();
-		logger.info("开始时间：" + startTime);
 
 		// 获取distinct_count_fwzl总数
 		String sql = "SELECT COUNT(DISTINCT(T.FWZL)) DISTINCT_COUNT FROM HZ_GIS.TPS_FW T WHERE T.LSBZ = 0 AND T.FWZL IS NOT NULL AND T.FWSMZQ = 1201";
@@ -61,9 +57,9 @@ public class SelectHzGisTpsFw implements Job {
 
 		// 获取Redis_keys总数
 		long dbSize = jedis.dbSize();
-		logger.info("Redis" + ":" + dbSize);
+		logger.info("Redis0号库中房屋坐落数量" + ":" + dbSize);
 
-		// Redis不存在则去35库查询--执行模块
+		// Redis和35信息不对称--执行模块
 		if (distinctCount != dbSize) {
 
 			// 条数不对称输出
@@ -73,16 +69,16 @@ public class SelectHzGisTpsFw implements Job {
 			Oracle jracle = new Oracle();
 			Connection connection = jracle.getConnection();
 
-			// Redis不存在则去35库查询--查询语句
+			// Redis和35信息不对称--查询语句
 			sql = "SELECT T.ID, T.FWCODE, T.FWZL FROM HZ_GIS.TPS_FW T WHERE T.LSBZ = 0 AND T.FWZL IS NOT NULL AND T.FWSMZQ = 1201";
 
-			// 不存在才执行sql
+			// 不对称执行sql
 			PreparedStatement preparedStatement = jracle.getPreparedStatement(connection, sql);
 			ResultSet resultSet = jracle.getResultSet(preparedStatement);
 
 			// 删除当前数据库所有key
 			jedis.flushDB();
-			logger.info("当前Redis数据库key已删除");
+			logger.info("当前Redis数据库key已删除！");
 
 			// 新增所有keys
 			try {
@@ -125,6 +121,8 @@ public class SelectHzGisTpsFw implements Job {
 
 		// 停止时间
 		long stopTime = System.nanoTime();
+
+		logger.info("开始时间：" + startTime);
 		logger.info("停止时间：" + stopTime);
 
 		// 总时间消耗
@@ -157,7 +155,7 @@ public class SelectHzGisTpsFw implements Job {
 		try {
 			while (resultSet.next()) {
 				distinctCount = resultSet.getInt(1);
-				logger.info("Oracle房屋坐落DistinctCount数量：" + distinctCount);
+				logger.info("Oracle35库中房屋坐落DistinctCount数量：" + distinctCount);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -168,12 +166,6 @@ public class SelectHzGisTpsFw implements Job {
 
 		// 返回房屋坐落DistinctCount数量
 		return distinctCount;
-	}
-
-	public void execute(JobExecutionContext context) throws JobExecutionException {
-		logger.info("定时任务开始！");
-		addKey();
-		logger.info("定时任务结束！");
 	}
 
 }

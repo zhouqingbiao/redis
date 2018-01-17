@@ -1,27 +1,34 @@
 package com.jws;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.jws.WebService;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
 
+import com.alibaba.fastjson.JSON;
 import com.data.Redis4HzFwdjTpfJcdjb;
 import com.data.Redis4HzGisTpsFw;
 import com.data.Redis4HzGisTpsFwWithColumnName;
+import com.data.Redis4HzGisTpsZrz;
 import com.data.SelectHzFwdjTpfJcdjb;
 import com.data.SelectHzGisTpsFw;
+import com.data.SelectHzGisTpsZrz;
 
 @WebService
 public class Jws {
 	// 获得Logger
 	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
+	/**
+	 * 用户名密码校验
+	 * 
+	 * @param user
+	 * @param password
+	 * @return
+	 */
 	private boolean checkUserAndPassword(String user, String password) {
 
 		// 获取Properties数据
@@ -48,11 +55,12 @@ public class Jws {
 	}
 
 	/**
-	 * 手动提取数据
+	 * 密码校验并手动提取数据
 	 * 
 	 * @param password
+	 * @param index
 	 */
-	public void manualExtractData(String password) {
+	public void manualExtractData(String password, int index) {
 
 		String user = "zhouqingbiao";
 		logger.info("user:" + user);
@@ -60,86 +68,85 @@ public class Jws {
 
 		// 校验密码
 		if (checkUserAndPassword(user, password) == true) {
-			new SelectHzGisTpsFw().addKey();
-			new SelectHzFwdjTpfJcdjb().addKey();
-		}
-	}
+			switch (index) {
+			case 0:
+				new SelectHzGisTpsFw().addKey();
+				break;
 
-	public String selectHzFwdjTpfJcdjb(String keys) {
+			case 1:
+				new SelectHzFwdjTpfJcdjb().addKey();
+				break;
 
-		JSONArray jSONArray = new JSONArray();
+			case 2:
+				new SelectHzGisTpsZrz().addKey();
+				break;
 
-		// WithColumnName
-		ArrayList<Map<String, String>> arrayList = new Redis4HzFwdjTpfJcdjb().getData(keys);
-
-		if (arrayList != null) {
-			for (int i = 0; i < arrayList.size(); i++) {
-				jSONArray.put(arrayList.get(i));
+			default:
+				break;
 			}
 		}
-
-		return jSONArray.toString();
 	}
 
 	/**
+	 * HzGisTpsZrz
+	 * 
+	 * @param keys
+	 * @return
+	 */
+	public String SelectHzGisTpsZrz(String keys) {
+		return JSON.toJSONString(new Redis4HzGisTpsZrz().getData(keys));
+	}
+
+	/**
+	 * HzFwdjTpfJcdjb
+	 * 
+	 * @param keys
+	 * @return
+	 */
+	public String selectHzFwdjTpfJcdjb(String keys) {
+
+		return JSON.toJSONString(new Redis4HzFwdjTpfJcdjb().getData(keys));
+	}
+
+	/**
+	 * HzGisTpsFw--返回FWCODE
 	 * 
 	 * @param keys
 	 * @return
 	 */
 	public String selectHzGisTpsFw(String keys) {
-		// NoColumnName
 		return new Redis4HzGisTpsFw().getData(keys);
 	}
 
 	/**
+	 * HzGisTpsFw--返回所有列
 	 * 
 	 * @param keys
 	 * @return
 	 */
 	public String selectHzGisTpsFwWithColumnName(String keys) {
 
-		JSONArray jSONArray = new JSONArray();
-
-		// WithColumnName
-		ArrayList<Map<String, String>> arrayList = new Redis4HzGisTpsFwWithColumnName().getData(keys);
-
-		if (arrayList != null) {
-			for (int i = 0; i < arrayList.size(); i++) {
-				jSONArray.put(arrayList.get(i));
-			}
-		}
-
-		return jSONArray.toString();
+		return JSON.toJSONString(new Redis4HzGisTpsFwWithColumnName().getData(keys));
 	}
 
 	/**
+	 * HzGisTpsFw--校验用户名密码并返回所有列
 	 * 
 	 * @param user
 	 * @param password
 	 * @param keys
 	 * @return
 	 */
-	public String selectHzGisTpsFwWithCheck(String user, String password, String keys) {
-
-		JSONArray jSONArray = new JSONArray();
+	public String selectHzGisTpsFwWithColumnNameAndCheck(String user, String password, String keys) {
 
 		logger.info("user:" + user);
 		logger.info("password:" + password);
 
 		// 校验密码
 		if (checkUserAndPassword(user, password) == false) {
-			return jSONArray.toString();
+			return null;
 		}
 
-		// WithColumnName
-		ArrayList<Map<String, String>> arrayList = new Redis4HzGisTpsFwWithColumnName().getData(keys);
-
-		if (arrayList != null) {
-			for (int i = 0; i < arrayList.size(); i++) {
-				jSONArray.put(arrayList.get(i));
-			}
-		}
-
-		return jSONArray.toString();
+		return JSON.toJSONString(new Redis4HzGisTpsFwWithColumnName().getData(keys));
 	}
 }
