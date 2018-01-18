@@ -56,7 +56,7 @@ public class SelectHzGisTpsZrz {
 		Connection connection = jracle.getConnection();
 
 		// sql
-		String sql = "SELECT A.ZRZZL, A.ID, A.ZRZCODE FROM HZ_GIS.TPS_ZRZ A WHERE A.ZRZZL IS NOT NULL AND LSBZ = 0";
+		String sql = "SELECT A.ZRZZL || DECODE(A.ZRZH, NULL, NULL, A.ZRZH || '幢') ZRZZL, A.ID, A.ZRZCODE FROM HZ_GIS.TPS_ZRZ A WHERE A.ZRZZL IS NOT NULL AND LSBZ = 0";
 
 		// 执行sql
 		PreparedStatement preparedStatement = jracle.getPreparedStatement(connection, sql);
