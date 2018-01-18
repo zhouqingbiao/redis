@@ -52,6 +52,11 @@ public class Redis4HzGisTpsZrz {
 			// 获取RedisList
 			for (String result : jedis.lrange(key, 0, jedis.llen(key) - 1)) {
 				resultList.add(JSON.parse(result));
+
+				// 如果条数达到20则返回List
+				if (resultList.size() == 20) {
+					return resultList;
+				}
 			}
 		}
 
