@@ -55,11 +55,14 @@ public class Redis4HzGisTpsZrz {
 
 				// 如果条数达到20则返回List
 				if (resultList.size() == 20) {
+					// 需提前关闭Redis
+					jedis.close();
+					jedisPool.close();
+					logger.info("Redis已关闭！");
 					return resultList;
 				}
 			}
 		}
-
 		// 关闭Redis
 		jedis.close();
 		jedisPool.close();
