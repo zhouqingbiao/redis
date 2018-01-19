@@ -52,6 +52,10 @@ public class SelectHzFwdjTpfJcdjb {
 		jedis.select(index);
 		logger.info("选择" + index + "号Redis数据库");
 
+		// 删除当前数据库所有key
+		jedis.flushDB();
+		logger.info("当前Redis数据库key已删除");
+
 		// 定义Oralce并获取连接
 		Oracle jracle = new Oracle();
 		Connection connection = jracle.getConnection();
@@ -62,10 +66,6 @@ public class SelectHzFwdjTpfJcdjb {
 		// 执行sql
 		PreparedStatement preparedStatement = jracle.getPreparedStatement(connection, sql);
 		ResultSet resultSet = jracle.getResultSet(preparedStatement);
-
-		// 删除当前数据库所有key
-		jedis.flushDB();
-		logger.info("当前Redis数据库key已删除");
 
 		// 新增所有keys
 		try {
