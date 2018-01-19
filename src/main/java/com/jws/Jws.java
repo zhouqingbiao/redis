@@ -109,13 +109,13 @@ public class Jws {
 	}
 
 	/**
-	 * HzGisTpsFw--返回FWCODE
+	 * HzGisTpsFw--返回所有列
 	 * 
 	 * @param keys
 	 * @return
 	 */
 	public String selectHzGisTpsFw(String keys) {
-		return new Redis4HzGisTpsFw().getData(keys);
+		return JSON.toJSONString(new Redis4HzGisTpsFw().getData(keys));
 	}
 
 	/**

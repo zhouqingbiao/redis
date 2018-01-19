@@ -59,7 +59,7 @@ public class Redis4HzGisTpsFwWithColumnName {
 		StringBuffer keysStringBuffer = new StringBuffer();
 		StringBuffer valuesStringBuffer = new StringBuffer();
 
-		// 定义idList
+		// 定义List
 		List<String> resultList = new ArrayList<String>();
 
 		// 组装StringBuffer

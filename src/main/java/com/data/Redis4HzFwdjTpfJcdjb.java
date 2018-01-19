@@ -19,6 +19,9 @@ public class Redis4HzFwdjTpfJcdjb {
 
 	public ArrayList<Object> getData(String keys) {
 
+		// 定义List
+		ArrayList<Object> resultList = new ArrayList<Object>();
+
 		// 过滤垃圾信息
 
 		// 获得JedisPool
@@ -42,11 +45,8 @@ public class Redis4HzFwdjTpfJcdjb {
 
 		if (set.isEmpty()) {
 			logger.info("查询结果为空！");
-			return null;
+			return resultList;
 		}
-
-		// 定义List
-		ArrayList<Object> resultList = new ArrayList<Object>();
 
 		for (String key : set) {
 

@@ -19,6 +19,9 @@ public class Redis4HzGisTpsZrz {
 
 	public ArrayList<Object> getData(String keys) {
 
+		// 定义List
+		ArrayList<Object> resultList = new ArrayList<Object>();
+
 		// 过滤垃圾信息
 
 		// 获得JedisPool
@@ -42,10 +45,8 @@ public class Redis4HzGisTpsZrz {
 
 		if (set.isEmpty()) {
 			logger.info("查询结果为空！");
-			return null;
+			return resultList;
 		}
-		// 定义List
-		ArrayList<Object> resultList = new ArrayList<Object>();
 
 		for (String key : set) {
 
@@ -55,6 +56,7 @@ public class Redis4HzGisTpsZrz {
 
 				// 如果条数达到20则返回List
 				if (resultList.size() == 20) {
+					
 					// 需提前关闭Redis
 					jedis.close();
 					jedisPool.close();
