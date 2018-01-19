@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import com.alibaba.fastjson.JSON;
 import com.data.Redis4HzFwdjTpfJcdjb;
 import com.data.Redis4HzGisTpsFw;
-import com.data.Redis4HzGisTpsFwWithColumnName;
 import com.data.Redis4HzGisTpsZrz;
 import com.data.SelectHzFwdjTpfJcdjb;
 import com.data.SelectHzGisTpsFw;
@@ -118,35 +117,4 @@ public class Jws {
 		return JSON.toJSONString(new Redis4HzGisTpsFw().getData(keys));
 	}
 
-	/**
-	 * HzGisTpsFw--返回所有列
-	 * 
-	 * @param keys
-	 * @return
-	 */
-	public String selectHzGisTpsFwWithColumnName(String keys) {
-
-		return JSON.toJSONString(new Redis4HzGisTpsFwWithColumnName().getData(keys));
-	}
-
-	/**
-	 * HzGisTpsFw--校验用户名密码并返回所有列
-	 * 
-	 * @param user
-	 * @param password
-	 * @param keys
-	 * @return
-	 */
-	public String selectHzGisTpsFwWithColumnNameAndCheck(String user, String password, String keys) {
-
-		logger.info("user:" + user);
-		logger.info("password:" + password);
-
-		// 校验密码
-		if (checkUserAndPassword(user, password) == false) {
-			return null;
-		}
-
-		return JSON.toJSONString(new Redis4HzGisTpsFwWithColumnName().getData(keys));
-	}
 }

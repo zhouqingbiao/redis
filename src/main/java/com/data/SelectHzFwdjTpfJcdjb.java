@@ -56,7 +56,7 @@ public class SelectHzFwdjTpfJcdjb {
 		Oracle jracle = new Oracle();
 		Connection connection = jracle.getConnection();
 
-		// 查询语句
+		// sql
 		String sql = "SELECT DJB.FWZL, QLR.QLRMC FROM HZ_FWDJ.TPF_JCDJB DJB LEFT JOIN (SELECT SY.QLID, SY.SYQZSH, SY.JCDJBID FROM HZ_FWDJ.TPF_SYQDJB SY WHERE SY.SFLS = 0 GROUP BY SY.QLID, SY.SYQZSH, SY.JCDJBID) S ON S.JCDJBID = DJB.ID LEFT OUTER JOIN HZ_FWDJ.TPF_QLR QLR ON QLR.QLID = S.QLID WHERE DJB.SFLS = 0 AND S.JCDJBID IS NOT NULL AND QLR.QLRLX = 4 AND QLR.SFLS = 0 AND DJB.FWZL IS NOT NULL AND QLR.QLRMC IS NOT NULL";
 
 		// 执行sql
@@ -71,10 +71,11 @@ public class SelectHzFwdjTpfJcdjb {
 		try {
 			// 记录Oracle数据量条数
 			int count = 0;
+
 			Map<String, String> map;
 			while (resultSet.next()) {
 
-				// 加入RedisList
+				// 加入Redis
 				map = new HashMap<String, String>();
 
 				for (int j = 1; j <= resultSet.getMetaData().getColumnCount(); j++) {
@@ -95,9 +96,6 @@ public class SelectHzFwdjTpfJcdjb {
 		} finally {
 			jracle.close(resultSet, preparedStatement, connection);
 		}
-
-		// 保存数据
-		jedis.save();
 
 		// 关闭Redis
 		jedis.close();

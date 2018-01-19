@@ -55,10 +55,10 @@ public class SelectHzGisTpsFw {
 		Oracle jracle = new Oracle();
 		Connection connection = jracle.getConnection();
 
-		// Redis和35信息不对称--查询语句
+		// sql
 		String sql = "SELECT T.FWZL, T.ID, T.FWCODE FROM HZ_GIS.TPS_FW T WHERE T.LSBZ = 0 AND T.FWZL IS NOT NULL AND T.FWSMZQ = 1201";
 
-		// 不对称执行sql
+		// 执行sql
 		PreparedStatement preparedStatement = jracle.getPreparedStatement(connection, sql);
 		ResultSet resultSet = jracle.getResultSet(preparedStatement);
 
@@ -66,6 +66,7 @@ public class SelectHzGisTpsFw {
 		try {
 			// 记录Oracle数据量条数
 			int count = 0;
+
 			Map<String, String> map;
 			while (resultSet.next()) {
 

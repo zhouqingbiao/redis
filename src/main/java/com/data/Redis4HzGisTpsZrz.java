@@ -56,7 +56,7 @@ public class Redis4HzGisTpsZrz {
 
 				// 如果条数达到20则返回List
 				if (resultList.size() == 20) {
-					
+
 					// 需提前关闭Redis
 					jedis.close();
 					jedisPool.close();
@@ -65,6 +65,7 @@ public class Redis4HzGisTpsZrz {
 				}
 			}
 		}
+
 		// 关闭Redis
 		jedis.close();
 		jedisPool.close();
