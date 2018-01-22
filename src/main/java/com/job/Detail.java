@@ -25,7 +25,7 @@ public class Detail implements Job {
 		Properties properties = new Properties();
 		try {
 			properties.load(Oracle2Redis.class.getResourceAsStream("Redis.properties"));
-			logger.info("成功加载Oracle.properties配置文件");
+			logger.info("成功加载Redis.properties配置文件");
 
 			// 循环更新Redis
 			for (int i = 0; i < properties.size(); i++) {
