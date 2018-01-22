@@ -9,12 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.alibaba.fastjson.JSON;
-import com.data.Redis4HzFwdjTpfJcdjb;
-import com.data.Redis4HzGisTpsFw;
-import com.data.Redis4HzGisTpsZrz;
-import com.data.SelectHzFwdjTpfJcdjb;
-import com.data.SelectHzGisTpsFw;
-import com.data.SelectHzGisTpsZrz;
+import com.data.Oracle2Redis;
+import com.data.Redis2WebService;
 
 @WebService
 public class Jws {
@@ -58,63 +54,34 @@ public class Jws {
 	 * 
 	 * @param password
 	 * @param index
+	 * @return
 	 */
-	public void manualExtractData(String password, int index) {
+	public boolean manualExtractData(String password, int index) {
 
 		String user = "zhouqingbiao";
 		logger.info("user:" + user);
 		logger.info("password:" + password);
 
+		// 定义Oracle2Redis
+		Oracle2Redis o2R = new Oracle2Redis();
+
 		// 校验密码
 		if (checkUserAndPassword(user, password) == true) {
-			switch (index) {
-			case 0:
-				new SelectHzGisTpsFw().addKey();
-				break;
-
-			case 1:
-				new SelectHzFwdjTpfJcdjb().addKey();
-				break;
-
-			case 2:
-				new SelectHzGisTpsZrz().addKey();
-				break;
-
-			default:
-				break;
-			}
+			o2R.addKey(index);
+			return true;
+		} else {
+			logger.info("密码错误！");
+			return false;
 		}
 	}
 
 	/**
-	 * HzGisTpsZrz
 	 * 
 	 * @param keys
 	 * @return
 	 */
-	public String SelectHzGisTpsZrz(String keys) {
-		return JSON.toJSONString(new Redis4HzGisTpsZrz().getData(keys));
-	}
-
-	/**
-	 * HzFwdjTpfJcdjb
-	 * 
-	 * @param keys
-	 * @return
-	 */
-	public String selectHzFwdjTpfJcdjb(String keys) {
-
-		return JSON.toJSONString(new Redis4HzFwdjTpfJcdjb().getData(keys));
-	}
-
-	/**
-	 * HzGisTpsFw--返回所有列
-	 * 
-	 * @param keys
-	 * @return
-	 */
-	public String selectHzGisTpsFw(String keys) {
-		return JSON.toJSONString(new Redis4HzGisTpsFw().getData(keys));
+	public String getData(String keys, int index, int rows) {
+		return JSON.toJSONString(new Redis2WebService().getData(keys, index, rows));
 	}
 
 }

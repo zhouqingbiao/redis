@@ -1,11 +1,13 @@
 package com.data;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,12 +19,23 @@ import com.redis.Redis;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-public class SelectHzGisTpsFw {
+public class Oracle2Redis {
 
 	// 获得Logger
 	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
-	public void addKey() {
+	/**
+	 * 通过传入index指定更新Redis
+	 * 
+	 * @param index
+	 */
+	public void addKey(int index) {
+
+		// 不能小于0号数据库
+		if (index < 0) {
+			logger.info("index不能小于0");
+			return;
+		}
 
 		// 定义Redis
 		JedisPool jedisPool = new Redis().getJedisPool();
@@ -40,37 +53,51 @@ public class SelectHzGisTpsFw {
 		// 判断是否连接成功
 		if (("PONG").equals(jedis.ping())) {
 			logger.info("Redis连接成功！");
+		} else {
+			logger.info("Redis连接失败！");
+			return;
 		}
 
 		// 选择数据库
-		int index = 0;
 		jedis.select(index);
 		logger.info("选择" + index + "号Redis数据库");
-
-		// 删除当前数据库所有key
-		jedis.flushDB();
-		logger.info("当前Redis数据库key已删除！");
 
 		// 定义Oralce并获取连接
 		Oracle jracle = new Oracle();
 		Connection connection = jracle.getConnection();
 
-		// sql
-		String sql = "SELECT T.FWZL, T.ID, T.FWCODE FROM HZ_GIS.TPS_FW T WHERE T.LSBZ = 0 AND T.FWZL IS NOT NULL AND T.FWSMZQ = 1201";
+		// 获取Properties数据
+		Properties properties = new Properties();
+
+		String sql = null;
+		try {
+			properties.load(Oracle2Redis.class.getResourceAsStream("Redis.properties"));
+			logger.info("成功加载Oracle.properties配置文件");
+			sql = properties.getProperty(String.valueOf(index));
+		} catch (IOException e) {
+			e.printStackTrace();
+			logger.warn(e);
+			return;
+		}
 
 		// 执行sql
 		PreparedStatement preparedStatement = jracle.getPreparedStatement(connection, sql);
 		ResultSet resultSet = jracle.getResultSet(preparedStatement);
 
-		// 新增所有keys
+		// 删除当前数据库所有key
+		jedis.flushDB();
+		logger.info("当前Redis数据库key已删除！");
+
+		// addKey
 		try {
+
 			// 记录Oracle数据量条数
 			int count = 0;
 
+			// 定义RedisValue键值对
 			Map<String, String> map;
-			while (resultSet.next()) {
 
-				// 加入Redis
+			while (resultSet.next()) {
 
 				map = new HashMap<String, String>();
 
@@ -78,9 +105,10 @@ public class SelectHzGisTpsFw {
 					map.put(resultSet.getMetaData().getColumnName(j), resultSet.getString(j));
 				}
 
+				// 加入Redis
 				jedis.lpush(resultSet.getString(1), JSON.toJSONString(map));
 
-				// 数据量自增长
+				// 数据量自增长，达到100000时输出。
 				count++;
 				if (count % 100000 == 0) {
 					logger.info(String.valueOf(count));
@@ -91,6 +119,8 @@ public class SelectHzGisTpsFw {
 			e.printStackTrace();
 			logger.warn(e);
 		} finally {
+
+			// 无论如何都尝试关闭Oracle
 			jracle.close(resultSet, preparedStatement, connection);
 		}
 
