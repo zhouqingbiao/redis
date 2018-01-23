@@ -32,15 +32,19 @@ public class Redis2WebService {
 
 		// 过滤垃圾信息
 
+		logger.info("KYES:" + keys);
+		logger.info("INDEX:" + index);
+		logger.info("ROWS:" + rows);
+
 		// 小于0返回null
 		if (index < 0) {
-			logger.info("index不能小于0");
+			logger.info("INDEX不能小于0");
 			return resultList;
 		}
 
-		// 小于0返回null
-		if (rows < 0) {
-			logger.info("rows不能小于0");
+		// 小于或等于0返回null
+		if (rows <= 0) {
+			logger.info("ROWS不能小于或等于0");
 			return resultList;
 		}
 

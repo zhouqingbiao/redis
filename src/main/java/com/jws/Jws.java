@@ -78,10 +78,11 @@ public class Jws {
 	/**
 	 * 
 	 * @param keys
+	 * @param index
+	 * @param rows
 	 * @return
 	 */
 	public String getData(String keys, int index, int rows) {
 		return JSON.toJSONString(new Redis2WebService().getData(keys, index, rows));
 	}
-
 }
