@@ -52,52 +52,54 @@ public class Redis2WebService {
 		JedisPool jedisPool = new Redis().getJedisPool();
 
 		// 获得Jedis
-		Jedis jedis = jedisPool.getResource();
+		Jedis jedis = null;
+		try {
+			jedis = jedisPool.getResource();
 
-		// 判断是否连接成功
-		if (("PONG").equals(jedis.ping())) {
-			logger.info("Redis连接成功！");
-		} else {
-			logger.info("Redis连接失败！");
-			return resultList;
-		}
+			// 判断是否连接成功
+			if (("PONG").equals(jedis.ping())) {
+				logger.info("Redis连接成功！");
+			} else {
+				logger.info("Redis连接失败！");
+				return resultList;
+			}
 
-		// 选择数据库
-		jedis.select(index);
-		logger.info("选择" + index + "号Redis数据库");
+			// 选择数据库
+			jedis.select(index);
+			logger.info("选择" + index + "号Redis数据库");
 
-		// 查询数据库
-		Set<String> set = jedis.keys(keys);
+			// 查询数据库
+			Set<String> set = jedis.keys(keys);
 
-		// 无数据量返回null
-		if (set.isEmpty()) {
-			logger.info("查询结果为空！");
-			return resultList;
-		}
+			// 无数据量返回null
+			if (set.isEmpty()) {
+				logger.info("查询结果为空！");
+				return resultList;
+			}
 
-		// 获取结果List
-		resultList = new ArrayList<Object>();
-		for (String key : set) {
+			// 获取结果List
+			resultList = new ArrayList<Object>();
+			for (String key : set) {
 
-			// 获取RedisList
-			for (String result : jedis.lrange(key, 0, jedis.llen(key) - 1)) {
-				resultList.add(JSON.parse(result));
+				// 获取RedisList
+				for (String result : jedis.lrange(key, 0, jedis.llen(key) - 1)) {
+					resultList.add(JSON.parse(result));
 
-				// 如果条数达到rows则返回List
-				if (resultList.size() == rows) {
-					// 需提前关闭Redis
-					jedis.close();
-					jedisPool.close();
-					logger.info("Redis已关闭！");
-					return resultList;
+					// 如果条数达到rows则返回List
+					if (resultList.size() == rows) {
+						return resultList;
+					}
 				}
 			}
+		} catch (Exception e) {
+			logger.info("Redis定义失败！请检查Redis是否正常运行！");
+			return resultList;
+		} finally {
+			// 无论如何都尝试关闭Redis
+			jedis.close();
+			jedisPool.close();
+			logger.info("Redis已关闭！");
 		}
-
-		// 关闭Redis
-		jedis.close();
-		jedisPool.close();
-		logger.info("Redis已关闭！");
 
 		return resultList;
 	}

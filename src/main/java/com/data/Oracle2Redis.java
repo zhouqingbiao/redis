@@ -37,9 +37,10 @@ public class Oracle2Redis {
 			return;
 		}
 
-		// 定义Redis
+		// 获得JedisPool
 		JedisPool jedisPool = new Redis().getJedisPool();
 
+		// 获得Jedis
 		Jedis jedis = null;
 		try {
 			jedis = jedisPool.getResource();
@@ -122,12 +123,11 @@ public class Oracle2Redis {
 
 			// 无论如何都尝试关闭Oracle
 			jracle.close(resultSet, preparedStatement, connection);
+
+			// 无论如何都尝试关闭Redis
+			jedis.close();
+			jedisPool.close();
+			logger.info("Redis已关闭！");
 		}
-
-		// 关闭Redis
-		jedis.close();
-		jedisPool.close();
-		logger.info("Redis已关闭！");
-
 	}
 }
