@@ -19,7 +19,7 @@ public class Publish {
 		Job.start();
 
 		// IP地址
-		String address = "127.0.0.1";
+		String address = "172.16.100.51";
 
 		// 组装WebService地址
 		address = "http://" + address + "/Jws";
