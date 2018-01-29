@@ -1,7 +1,5 @@
 package com.job;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -11,10 +9,9 @@ import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
-public class Job {
+import com.logger.Logger;
 
-	// 获得Logger
-	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
+public class Job {
 
 	/**
 	 * 定时任务
@@ -25,8 +22,7 @@ public class Job {
 		try {
 			scheduler = StdSchedulerFactory.getDefaultScheduler();
 		} catch (SchedulerException e) {
-			e.printStackTrace();
-			logger.warn(e);
+			Logger.logger.warn(e.getMessage(), e);
 		}
 
 		// 建立JobDetail
@@ -40,16 +36,14 @@ public class Job {
 		try {
 			scheduler.scheduleJob(job, trigger);
 		} catch (SchedulerException e) {
-			e.printStackTrace();
-			logger.warn(e);
+			Logger.logger.warn(e.getMessage(), e);
 		}
 
 		// and start it off
 		try {
 			scheduler.start();
 		} catch (SchedulerException e) {
-			e.printStackTrace();
-			logger.warn(e);
+			Logger.logger.warn(e.getMessage(), e);
 		}
 	}
 }

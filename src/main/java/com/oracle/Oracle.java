@@ -8,14 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.logger.Logger;
 
 public class Oracle {
-
-	// 获得Logger
-	private static final Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
-
 	// 数据库连接次数，最大不超过4次。
 	int i = 1;
 
@@ -25,58 +20,50 @@ public class Oracle {
 	 */
 	public Connection getConnection() {
 
-		// 注册数据库驱动
+		// OracleDriver
+		String className = "oracle.jdbc.driver.OracleDriver";
 		try {
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			logger.info("Oracle数据库驱动注册成功");
+			Class.forName(className);
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			logger.warn(e);
+			Logger.logger.warn(e.getMessage(), e);
 		}
 
 		String url = null;
 		String user = null;
 		String password = null;
 
-		// 获取Properties数据
+		// Properties
 		Properties properties = new Properties();
 		try {
 			properties.load(Oracle.class.getResourceAsStream("Oracle.properties"));
-			logger.info("成功加载Oracle.properties配置文件");
+			Logger.logger.info("成功加载Oracle.properties配置文件。");
 			url = properties.getProperty("url" + i);
 			user = properties.getProperty("user");
 			password = properties.getProperty("password");
 		} catch (IOException e) {
-			e.printStackTrace();
-			logger.warn(e);
+			Logger.logger.warn(e.getMessage(), e);
 		}
+
 		// 获取数据库连接
 		Connection connection = null;
 		try {
 			connection = DriverManager.getConnection(url, user, password);
-			logger.info("Oracle数据库连接成功");
-			logger.info("url" + "=" + url);
-			logger.info("user" + "=" + user);
-			logger.info("password" + "=" + password);
 		} catch (SQLException e) {
-			e.printStackTrace();
-			logger.warn(url + "连接失败！");
-			logger.warn(e);
+
+			Logger.logger.warn(e.getMessage(), e);
 
 			// 次数自增长
 			i++;
 
-			// 超过4次程序退出
-			if (i == 5) {
-				logger.info("所有url都未能连接上，请检查数据库及通信情况！");
-				logger.info("程序退出！");
-				System.exit(0);
+			// 超过4次不再执行
+			if (i > 4) {
+				return null;
 			}
 
-			// 出错时重复调用直至超出最大连接次数
+			// 出错时重复调用下一个url, user, password直至超出最大连接次数
 			return this.getConnection();
-
 		}
+
 		return connection;
 	}
 
@@ -95,11 +82,11 @@ public class Oracle {
 			preparedStatement = connection.prepareStatement(sql);
 
 			// 输出SQL
-			logger.info(sql);
+			Logger.logger.info(sql);
 		} catch (SQLException e) {
-			e.printStackTrace();
-			logger.warn(e);
+			Logger.logger.warn(e.getMessage(), e);
 		}
+
 		return preparedStatement;
 	}
 
@@ -116,11 +103,10 @@ public class Oracle {
 		try {
 			resultSet = preparedStatement.executeQuery();
 		} catch (SQLException e) {
-			e.printStackTrace();
-			logger.warn(e);
+			Logger.logger.warn(e.getMessage(), e);
 		}
-		return resultSet;
 
+		return resultSet;
 	}
 
 	/**
@@ -135,10 +121,9 @@ public class Oracle {
 		if (resultSet != null) {
 			try {
 				resultSet.close();
-				logger.info("ResultSet已关闭！");
+				Logger.logger.info("ResultSet已关闭！");
 			} catch (SQLException e) {
-				e.printStackTrace();
-				logger.warn(e);
+				Logger.logger.warn(e.getMessage(), e);
 			}
 		}
 
@@ -146,10 +131,9 @@ public class Oracle {
 		if (preparedStatement != null) {
 			try {
 				preparedStatement.close();
-				logger.info("PreparedStatement已关闭！");
+				Logger.logger.info("PreparedStatement已关闭！");
 			} catch (SQLException e) {
-				e.printStackTrace();
-				logger.warn(e);
+				Logger.logger.warn(e.getMessage(), e);
 			}
 		}
 
@@ -157,13 +141,12 @@ public class Oracle {
 		if (connection != null) {
 			try {
 				connection.close();
-				logger.info("Connection已关闭！");
+				Logger.logger.info("Connection已关闭！");
 			} catch (SQLException e) {
-				e.printStackTrace();
-				logger.warn(e);
+				Logger.logger.warn(e.getMessage(), e);
 			}
 		}
 
-		logger.info("Oracle已关闭！");
+		Logger.logger.info("Oracle已关闭！");
 	}
 }
