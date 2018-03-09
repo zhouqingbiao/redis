@@ -11,7 +11,8 @@ import java.util.Properties;
 import com.logger.Logger;
 
 public class Oracle {
-	// 数据库连接次数，最大不超过4次。
+	// 数据库连接次数，最大不超过2次。
+	final int max = 2;
 	int i = 1;
 
 	/**
@@ -55,8 +56,8 @@ public class Oracle {
 			// 次数自增长
 			i++;
 
-			// 超过4次不再执行
-			if (i > 4) {
+			// 超过次数不再执行
+			if (i > max) {
 				return null;
 			}
 
