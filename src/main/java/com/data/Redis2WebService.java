@@ -39,8 +39,8 @@ public class Redis2WebService {
 			return null;
 		}
 
-		// 小于或等于0返回null
-		if (rows <= 0) {
+		// 小于或等于0且不等于-1返回null
+		if (rows <= 0 && rows != -1) {
 			Logger.logger.info("rows不能小于或等于零。");
 			return null;
 		}
