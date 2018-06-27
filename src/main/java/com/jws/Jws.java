@@ -1,20 +1,19 @@
 package com.jws;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.Properties;
-
-import javax.annotation.Resource;
-import javax.jws.WebService;
-import javax.xml.ws.WebServiceContext;
-import javax.xml.ws.handler.MessageContext;
-
 import com.alibaba.fastjson.JSON;
 import com.data.Oracle2Redis;
 import com.data.Redis2WebService;
 import com.logger.Logger;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.xml.internal.ws.developer.JAXWSProperties;
+
+import javax.annotation.Resource;
+import javax.jws.WebService;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.Properties;
 
 @WebService
 public class Jws {

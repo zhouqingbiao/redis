@@ -1,5 +1,11 @@
 package com.data;
 
+import com.alibaba.fastjson.JSON;
+import com.logger.Logger;
+import com.oracle.Oracle;
+import com.redis.Redis;
+import redis.clients.jedis.Jedis;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,13 +14,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import com.alibaba.fastjson.JSON;
-import com.logger.Logger;
-import com.oracle.Oracle;
-import com.redis.Redis;
-
-import redis.clients.jedis.Jedis;
 
 public class Oracle2Redis {
 

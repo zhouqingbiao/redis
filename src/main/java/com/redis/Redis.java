@@ -1,7 +1,6 @@
 package com.redis;
 
 import com.logger.Logger;
-
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 

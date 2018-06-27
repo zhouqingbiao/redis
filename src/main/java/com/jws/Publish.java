@@ -1,9 +1,9 @@
 package com.jws;
 
-import javax.xml.ws.Endpoint;
-
 import com.job.Job;
 import com.logger.Logger;
+
+import javax.xml.ws.Endpoint;
 
 /**
  * 定时任务启动并发布WebService

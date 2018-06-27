@@ -1,14 +1,13 @@
 package com.job;
 
-import java.io.IOException;
-import java.util.Properties;
-
+import com.data.Oracle2Redis;
+import com.logger.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-import com.data.Oracle2Redis;
-import com.logger.Logger;
+import java.io.IOException;
+import java.util.Properties;
 
 public class Detail implements Job {
 

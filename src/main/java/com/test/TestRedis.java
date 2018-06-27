@@ -1,13 +1,12 @@
 package com.test;
 
-import java.util.ArrayList;
-import java.util.Set;
-
 import com.alibaba.fastjson.JSON;
 import com.logger.Logger;
 import com.redis.Redis;
-
 import redis.clients.jedis.Jedis;
+
+import java.util.ArrayList;
+import java.util.Set;
 
 public class TestRedis {
 

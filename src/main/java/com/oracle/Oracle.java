@@ -1,14 +1,10 @@
 package com.oracle;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Properties;
-
 import com.logger.Logger;
+
+import java.io.IOException;
+import java.sql.*;
+import java.util.Properties;
 
 public class Oracle {
     // 数据库连接次数，最大不超过2次。
