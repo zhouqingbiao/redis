@@ -7,9 +7,6 @@ import java.sql.*;
 import java.util.Properties;
 
 public class Oracle {
-    // 数据库连接次数，最大不超过2次。
-    final int max = 2;
-    int i = 1;
 
     /**
      * @return Connection
@@ -31,9 +28,9 @@ public class Oracle {
         // Properties
         Properties properties = new Properties();
         try {
-            properties.load(Oracle.class.getResourceAsStream("Oracle.properties"));
+            properties.load(this.getClass().getClassLoader().getResourceAsStream("Oracle.properties"));
             Logger.logger.info("成功加载Oracle.properties配置文件。");
-            url = properties.getProperty("url" + i);
+            url = properties.getProperty("url");
             user = properties.getProperty("user");
             password = properties.getProperty("password");
         } catch (IOException e) {
@@ -47,14 +44,6 @@ public class Oracle {
         } catch (SQLException e) {
 
             Logger.logger.warn(e.getMessage(), e);
-
-            // 次数自增长
-            i++;
-
-            // 超过次数不再执行
-            if (i > max) {
-                return null;
-            }
 
             // 出错时重复调用下一个url, user, password直至超出最大连接次数
             return this.getConnection();

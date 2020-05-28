@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level[%C.%M:%L] - %m%n"/>
+        </Console>
+        <RollingFile name="RollingFile" fileName="/usr/local/redis-4.0.6/logs/java.log"
+                     filePattern="/usr/local/redis-4.0.6/logs/$${date:yyyy-MM}/java-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level[%C.%M:%L] - %m%n"/>
+            <SizeBasedTriggeringPolicy size="1024MB"/>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

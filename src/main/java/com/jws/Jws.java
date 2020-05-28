@@ -43,7 +43,7 @@ public class Jws {
         // 获取Properties数据
         Properties properties = new Properties();
         try {
-            properties.load(Jws.class.getResourceAsStream("Jws.properties"));
+            properties.load(this.getClass().getClassLoader().getResourceAsStream("Jws.properties"));
 
             // user和password都不能为空
             if (null == user || null == password || "".equals(user) || "".equals(password)) {
@@ -73,7 +73,7 @@ public class Jws {
 
         this.get();
 
-        String user = "zhouqingbiao";
+        String user = "ZhouQingbiao";
         Logger.logger.info("user:" + user);
         Logger.logger.info("password:" + password);
 

@@ -54,7 +54,7 @@ public class Oracle2Redis {
 
             String sql = null;
             try {
-                properties.load(Oracle2Redis.class.getResourceAsStream("Redis.properties"));
+                properties.load(this.getClass().getClassLoader().getResourceAsStream("Redis.properties"));
                 Logger.logger.info("成功加载Redis.properties配置文件。");
                 sql = properties.getProperty(String.valueOf(index));
             } catch (IOException e) {
